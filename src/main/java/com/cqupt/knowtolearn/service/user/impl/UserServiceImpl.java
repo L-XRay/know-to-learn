@@ -10,6 +10,7 @@ import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import com.cqupt.knowtolearn.service.user.IUserService;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.PasswordUtil;
+import com.cqupt.knowtolearn.utils.UserHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Service;
@@ -92,10 +93,12 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         map.put("email",user.getEmail());
         map.put("nickname",user.getNickname());
         String token = jwtUtil.encodeToken(map);
-        return new LoginRes(
+        LoginRes res = new LoginRes(
                 user.getUsername(),
                 user.getNickname(),
                 user.getEmail(),
                 token);
+        UserHolder.saveUser(res);
+        return res;
     }
 }

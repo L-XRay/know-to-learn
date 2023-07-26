@@ -86,7 +86,9 @@ public class JwtUtil {
 
         JWT jwt = JWT.getDecoder().decode(token, verifier);
 
-        if(jwt.isExpired()) return null;
+        if(jwt.isExpired()) {
+            return null;
+        }
 
         return jwt.getAllClaims();
     }
