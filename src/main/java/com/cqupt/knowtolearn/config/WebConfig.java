@@ -27,12 +27,20 @@ public class WebConfig implements WebMvcConfigurer {
     @Resource
     private JwtUtil jwtUtil;
 
+    public static final String URL="/chief/**";
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(URL).addResourceLocations("classpath:/static/");
+    }
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new LoginInterceptor())
                 .excludePathPatterns(
                         "/user/login",
-                        "/captcha/**").order(1);
+                        "/captcha/**",
+                        "/chief/**").order(1);
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate,jwtUtil))
                 .addPathPatterns("/**").order(0);
     }
