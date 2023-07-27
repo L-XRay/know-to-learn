@@ -15,7 +15,7 @@ public interface ICaptchaService {
      * @param captchaReq 请求参数
      * @return res
      */
-    CaptchaRes generate(CaptchaReq captchaReq, String verify);
+    CaptchaRes generate(CaptchaReq captchaReq);
 
     /**
      * 校验验证码

@@ -39,17 +39,17 @@ public class EmailCaptchaBaseImpl extends AbstractCaptchaBase implements ICaptch
     private ICaptchaStore redisCaptchaStore;
 
     @Override
-    public CaptchaRes generate(CaptchaReq captchaReq, String verify) {
-        if (redisCaptchaStore.get("verify:" + verify) == null) {
+    public CaptchaRes generate(CaptchaReq captchaReq) {
+        if (redisCaptchaStore.get("verify:" + captchaReq.getVerify()) == null) {
             throw new KnowException("邮件暂时不能发送,请重新获取验证码");
         }
-        String existKey = "email:" + captchaReq.getEmail();
-        if (redisCaptchaStore.hasKey(existKey)) {
-            CaptchaRes res = new CaptchaRes();
-            res.setKey(existKey);
-            res.setTtl(redisCaptchaStore.ttl(existKey));
-            return res;
-        }
+//        String existKey = "email:" + captchaReq.getEmail();
+//        if (redisCaptchaStore.hasKey(existKey)) {
+//            CaptchaRes res = new CaptchaRes();
+//            res.setKey(existKey);
+//            res.setTtl(redisCaptchaStore.ttl(existKey));
+//            return res;
+//        }
         String userEmail = captchaReq.getEmail();
         GenerateResult generate = doGenerate(captchaReq, 4, "email:", 3);
         String key = generate.getKey();
@@ -69,12 +69,12 @@ public class EmailCaptchaBaseImpl extends AbstractCaptchaBase implements ICaptch
             helper.setTo(userEmail);
             javaMailSender.send(message);
         } catch (javax.mail.MessagingException e) {
-            throw new RuntimeException("邮件发送失败",e);
+            throw new KnowException("邮件发送失败");
         }
         CaptchaRes res = new CaptchaRes();
         res.setKey(key);
         res.setTtl(redisCaptchaStore.ttl(key));
-        redisCaptchaStore.remove("verify:"+ verify);
+        redisCaptchaStore.remove("verify:"+ captchaReq.getVerify());
         return res;
     }
 }

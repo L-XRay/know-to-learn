@@ -10,7 +10,7 @@ import com.cqupt.knowtolearn.model.dto.res.LoginRes;
 * @date 2023-07-26
 * @description  服务接口
 */
-public interface IUserService extends IService<User> {
+public interface IUserService {
 
     LoginRes login(LoginReq req);
 }

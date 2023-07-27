@@ -17,6 +17,8 @@ public class CaptchaReq {
      */
     private String email;
 
+    private String verify;
+
     public String getType() {
         return type;
     }
@@ -31,5 +33,13 @@ public class CaptchaReq {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getVerify() {
+        return verify;
+    }
+
+    public void setVerify(String verify) {
+        this.verify = verify;
     }
 }

@@ -21,18 +21,16 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(KnowException.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseStatus(HttpStatus.OK)
     public Result captureException(KnowException e) {
-        logger.error("系统异常: {}",e.getException(),e);
-
-        return Result.build(500,"error",e.getException());
+        logger.error("操作异常: {}",e.getException(),e);
+        return Result.fail(500,e.getException());
     }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Result exception(Exception e){
         logger.error("系统异常: {}",e.getMessage(),e);
-
         return Result.build(500,"error",e.getMessage());
     }
 }

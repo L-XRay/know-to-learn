@@ -32,18 +32,17 @@ public class PicCaptchaBaseImpl extends AbstractCaptchaBase implements ICaptchaS
     private ICaptchaStore redisCaptchaStore;
 
     @Override
-    public CaptchaRes generate(CaptchaReq captchaReq, String verify) {
+    public CaptchaRes generate(CaptchaReq captchaReq) {
         GenerateResult generate = doGenerate(captchaReq, 4, "captcha:", 3);
         String key = generate.getKey();
         String code = generate.getCode();
         String pic = createPic(code);
         CaptchaRes res = new CaptchaRes();
-        String s = UUID.randomUUID().toString();
-        redisCaptchaStore.set("verify:" + s,"",1);
+//        String s = UUID.randomUUID().toString();
         res.setAliasing(pic);
         res.setKey(key);
         res.setTtl(redisCaptchaStore.ttl(key));
-        res.setPayLoad(s);
+//        res.setPayload(s);
         return res;
     }
 

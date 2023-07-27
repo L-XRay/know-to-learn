@@ -1,5 +1,6 @@
 package com.cqupt.knowtolearn.service.captcha;
 
+import cn.hutool.core.lang.UUID;
 import com.cqupt.knowtolearn.model.dto.req.CaptchaReq;
 import com.cqupt.knowtolearn.model.dto.res.CaptchaRes;
 import org.slf4j.Logger;
@@ -26,7 +27,7 @@ public abstract class AbstractCaptchaBase implements ICaptchaService {
     private ICaptchaGenerator captchaGenerator;
 
     @Override
-    public abstract CaptchaRes generate(CaptchaReq captchaReq, String verify);
+    public abstract CaptchaRes generate(CaptchaReq captchaReq);
 
     @Override
     public boolean verify(String key, String code) {

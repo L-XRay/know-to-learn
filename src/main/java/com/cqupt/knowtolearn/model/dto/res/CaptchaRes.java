@@ -23,12 +23,6 @@ public class CaptchaRes {
      */
     private String aliasing;
 
-
-    /**
-     * 图片发送后生成UUID为限制邮箱发送
-     */
-    private String payLoad;
-
     /**
      * 过期时间
      */
@@ -50,13 +44,6 @@ public class CaptchaRes {
         this.key = key;
     }
 
-    public String getPayLoad() {
-        return payLoad;
-    }
-
-    public void setPayLoad(String payLoad) {
-        this.payLoad = payLoad;
-    }
 
     public Long getTtl() {
         return ttl;
