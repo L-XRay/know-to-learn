@@ -1,11 +1,15 @@
 package com.cqupt.knowtolearn.interceptor;
 
+import com.cqupt.knowtolearn.model.dto.res.LoginRes;
+import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Map;
 
 /**
  * @author Ray
@@ -16,8 +20,8 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        if (UserHolder.getUser()==null) {
-            response.setStatus(401);
+        String token = request.getHeader("Authorization");
+        if (token==null) {
             return false;
         }
         return true;
@@ -31,6 +35,6 @@ public class LoginInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         // 避免 ThreadLocal key 弱引用 造成内存泄漏
-        UserHolder.removeUser();
+//        UserHolder.removeUser();
     }
 }

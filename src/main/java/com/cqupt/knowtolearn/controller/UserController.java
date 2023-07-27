@@ -29,8 +29,8 @@ public class UserController {
     public Result login(HttpServletRequest request, @RequestBody LoginReq loginReq) {
         LoginRes res = userService.login(loginReq);
         if (res != null) {
-            String userAgent = request.getHeader("User-Agent");
-            UserHolder.saveUserAgent(userAgent);
+//            String userAgent = request.getHeader("User-Agent");
+//            UserHolder.saveUserAgent(userAgent);
             return Result.success("登录成功", res);
         }
         return Result.fail("登录失败");

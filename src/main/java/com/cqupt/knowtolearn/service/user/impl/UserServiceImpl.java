@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.service.user.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
+import com.cqupt.knowtolearn.model.dto.UserDTO;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
@@ -89,16 +90,16 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
 
     private LoginRes getLoginRes(User user) {
         Map<String,Object> map = new HashMap<>();
-        map.put("username",user.getUsername());
-        map.put("email",user.getEmail());
-        map.put("nickname",user.getNickname());
+        String username = user.getUsername();
+        String nickname = user.getNickname();
+        String email = user.getEmail();
+        map.put("username", username);
+        map.put("email", email);
+        map.put("nickname", nickname);
         String token = jwtUtil.encodeToken(map);
-        LoginRes res = new LoginRes(
-                user.getUsername(),
-                user.getNickname(),
-                user.getEmail(),
-                token);
-        UserHolder.saveUser(res);
+        UserDTO userDTO = new UserDTO(username, nickname, email);
+        LoginRes res = new LoginRes(userDTO, token);
+//        UserHolder.saveUser(res);
         return res;
     }
 }

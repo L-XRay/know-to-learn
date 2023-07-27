@@ -1,5 +1,7 @@
 package com.cqupt.knowtolearn.model.dto.res;
 
+import com.cqupt.knowtolearn.model.dto.UserDTO;
+
 /**
  * @author Ray
  * @date 2023/7/26 19:07
@@ -7,46 +9,24 @@ package com.cqupt.knowtolearn.model.dto.res;
  */
 public class LoginRes {
 
-    private String username;
-
-    private String nickname;
-
-    private String email;
+    private UserDTO userInfo;
 
     private String token;
 
     public LoginRes() {
     }
 
-    public LoginRes(String username, String nickname, String email, String token) {
-        this.username = username;
-        this.nickname = nickname;
-        this.email = email;
+    public LoginRes(UserDTO userInfo, String token) {
+        this.userInfo = userInfo;
         this.token = token;
     }
 
-    public String getUsername() {
-        return username;
+    public UserDTO getUserInfo() {
+        return userInfo;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUserInfo(UserDTO userInfo) {
+        this.userInfo = userInfo;
     }
 
     public String getToken() {

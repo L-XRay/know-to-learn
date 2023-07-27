@@ -1,12 +1,10 @@
-package com.cqupt.knowtolearn.annotation;
+package com.cqupt.knowtolearn.aop;
 
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -30,13 +28,19 @@ public class LoggingAspect {
 
     @After("execution(* com.cqupt.knowtolearn.controller.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
+        String username;
         HttpServletRequest request = findRequestInArgs(joinPoint.getArgs());
-
-        // 获取当前用户名
-        String username = UserHolder.getUser().getUsername();
+        assert request != null;
+        if (request.getHeader("Authorization") == null) {
+            username = "未登录用户";
+        } else {
+            String token = request.getHeader("Authorization").substring(7);
+            // 获取当前用户名
+            username = (String) jwtUtil.decodeToken(token).get("username");
+        }
 
         // 获取浏览器信息
-        String userAgent = UserHolder.getUserAgent();
+        String userAgent = request.getHeader("User-Agent");
 
         // 获取方法名
         String methodName = joinPoint.getSignature().getName();
@@ -45,7 +49,6 @@ public class LoggingAspect {
         String interfaceInfo = getInterfaceInfo(joinPoint);
 
         // 获取请求url
-        assert request != null;
         String url = request.getRequestURL().toString();
 
         // 记录日志

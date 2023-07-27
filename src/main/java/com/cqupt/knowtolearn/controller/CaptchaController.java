@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Ray
@@ -26,7 +27,7 @@ public class CaptchaController {
     private ICaptchaService emailCaptchaService;
 
     @PostMapping(value = "/generate")
-    public Result generateCaptcha(CaptchaReq captchaReq, String verify){
+    public Result generateCaptcha(HttpServletRequest request,CaptchaReq captchaReq, String verify){
         String type = captchaReq.getType();
         if ("pic".equals(type)) {
             CaptchaRes res = picCaptchaService.generate(captchaReq, null);
@@ -44,6 +45,5 @@ public class CaptchaController {
         }
         return Result.success("校验成功",false);
     }
-
 
 }

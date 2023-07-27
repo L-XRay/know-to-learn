@@ -1,5 +1,6 @@
 package com.cqupt.knowtolearn.utils;
 
+import com.cqupt.knowtolearn.exception.KnowException;
 import io.fusionauth.jwt.JWTExpiredException;
 import io.fusionauth.jwt.Signer;
 import io.fusionauth.jwt.Verifier;
@@ -65,8 +66,7 @@ public class JwtUtil {
     public String encodeToken(Map<String, Object> payload) {
         String privateKey = getRsaPrivateKey();
         if (privateKey == null) {
-            // Handle the case when the private key is not available
-            throw new IllegalStateException("Private key is not available");
+            throw new KnowException("私钥不可用");
         }
         Signer signer = RSASigner.newSHA256Signer(getRsaPrivateKey()); // 用私钥签名
 
@@ -84,13 +84,49 @@ public class JwtUtil {
     public Map<String, Object> decodeToken(String token) throws JWTExpiredException {
         Verifier verifier = RSAVerifier.newVerifier(getRsaPublicKey());  // 用公钥解密
 
-        JWT jwt = JWT.getDecoder().decode(token, verifier);
-
-        if(jwt.isExpired()) {
-            return null;
+        JWT jwt = null;
+        try {
+            jwt = JWT.getDecoder().decode(token, verifier);
+            if(jwt.isExpired()) {
+                return null;
+            }
+        } catch (Exception e) {
+            throw new KnowException("token 已过期.");
         }
 
         return jwt.getAllClaims();
+    }
+
+    public boolean isExpired(String token) {
+        Verifier verifier = RSAVerifier.newVerifier(getRsaPublicKey());  // 用公钥解密
+        JWT jwt = null;
+        try {
+            jwt = JWT.getDecoder().decode(token, verifier);
+        } catch (JWTExpiredException e) {
+            throw new KnowException("token不存在或已过期.");
+        }
+        return jwt.isExpired();
+    }
+
+    public String refreshToken(String token) {
+        // 首先验证原始令牌
+        Verifier verifier = RSAVerifier.newVerifier(getRsaPublicKey());
+        JWT jwt = null;
+        try {
+            jwt = JWT.getDecoder().decode(token, verifier);
+            // 如果原始令牌已过期，则拒绝续期
+            if (jwt.isExpired()) {
+                throw new KnowException("不能续签已过期的token.");
+            }
+        } catch (JWTExpiredException e) {
+            throw new KnowException("不能续签已过期或不存在的token.");
+        }
+
+        // 更新令牌的过期时间
+        jwt.setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(ttl));
+        // 重新签名令牌
+        Signer signer = RSASigner.newSHA256Signer(getRsaPrivateKey());
+        return JWT.getEncoder().encode(jwt, signer);
     }
 
 }
