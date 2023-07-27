@@ -93,11 +93,13 @@ public class UserServiceImpl extends ServiceImpl<IUserDao, User> implements IUse
         String username = user.getUsername();
         String nickname = user.getNickname();
         String email = user.getEmail();
+        String avatar = user.getAvatar();
         map.put("username", username);
         map.put("email", email);
         map.put("nickname", nickname);
+        map.put("avatar", nickname);
         String token = jwtUtil.encodeToken(map);
-        UserDTO userDTO = new UserDTO(username, nickname, email);
+        UserDTO userDTO = new UserDTO(username, nickname,avatar, email);
         LoginRes res = new LoginRes(userDTO, token);
 //        UserHolder.saveUser(res);
         return res;

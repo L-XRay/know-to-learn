@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.controller;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.CaptchaReq;
 import com.cqupt.knowtolearn.model.dto.res.CaptchaRes;
+import com.cqupt.knowtolearn.service.captcha.CaptchaStrategy;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,25 +22,19 @@ import javax.servlet.http.HttpServletRequest;
 public class CaptchaController {
 
     @Resource
-    private ICaptchaService picCaptchaService;
-
-    @Resource
-    private ICaptchaService emailCaptchaService;
+    private CaptchaStrategy captchaStrategy;
 
     @PostMapping(value = "/generate")
     public Result generateCaptcha(HttpServletRequest request,CaptchaReq captchaReq, String verify){
         String type = captchaReq.getType();
-        if ("pic".equals(type)) {
-            CaptchaRes res = picCaptchaService.generate(captchaReq, null);
-            return Result.success("生成图像验证码成功",res);
-        }
-        CaptchaRes res = emailCaptchaService.generate(captchaReq, verify);
-        return Result.success("发送邮箱验证码成功",res);
+        ICaptchaService captchaService = captchaStrategy.getCaptchaService(type);
+        CaptchaRes res = captchaService.generate(captchaReq, verify);
+        return Result.success("发送验证码成功",res);
     }
 
     @PostMapping(value = "/verify")
     public Result verify(String key, String code){
-        boolean verify = picCaptchaService.verify(key, code);
+        boolean verify = captchaStrategy.getCaptchaService("pic").verify(key, code);
         if (verify) {
             return Result.success("校验成功",true);
         }

@@ -11,14 +11,17 @@ public class UserDTO {
 
     private String nickname;
 
+    private String avatar;
+
     private String email;
 
     public UserDTO() {
     }
 
-    public UserDTO(String username, String nickname, String email) {
+    public UserDTO(String username, String nickname, String avatar, String email) {
         this.username = username;
         this.nickname = nickname;
+        this.avatar = avatar;
         this.email = email;
     }
 
@@ -36,6 +39,14 @@ public class UserDTO {
 
     public void setNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getEmail() {

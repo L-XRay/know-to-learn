@@ -12,9 +12,9 @@ import javax.annotation.Resource;
  * @date 2023/7/25 09:30
  * @description
  */
-public abstract class AbstractCaptchaService implements ICaptchaService {
+public abstract class AbstractCaptchaBase implements ICaptchaService {
 
-    private final Logger logger = LoggerFactory.getLogger(AbstractCaptchaService.class);
+    private final Logger logger = LoggerFactory.getLogger(AbstractCaptchaBase.class);
 
     @Resource(name = "redisCaptchaStore")
     private ICaptchaStore redisCaptchaStore;
@@ -74,7 +74,7 @@ public abstract class AbstractCaptchaService implements ICaptchaService {
      * @param expire 过期时间
      * @return 生成结果
      */
-    public GenerateResult generate(CaptchaReq captchaReq,Integer length,String keyPrefix,Integer expire){
+    public GenerateResult doGenerate(CaptchaReq captchaReq,Integer length,String keyPrefix,Integer expire){
         //生成四位验证码
         String code = captchaGenerator.generate(length);
         String key = null;

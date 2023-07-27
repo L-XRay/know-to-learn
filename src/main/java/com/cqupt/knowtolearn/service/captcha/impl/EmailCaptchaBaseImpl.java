@@ -1,8 +1,9 @@
 package com.cqupt.knowtolearn.service.captcha.impl;
 
+import com.cqupt.knowtolearn.exception.KnowException;
 import com.cqupt.knowtolearn.model.dto.req.CaptchaReq;
 import com.cqupt.knowtolearn.model.dto.res.CaptchaRes;
-import com.cqupt.knowtolearn.service.captcha.AbstractCaptchaService;
+import com.cqupt.knowtolearn.service.captcha.AbstractCaptchaBase;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import java.util.Arrays;
  * @description
  */
 @Service("emailCaptchaService")
-public class EmailCaptchaServiceImpl extends AbstractCaptchaService implements ICaptchaService {
+public class EmailCaptchaBaseImpl extends AbstractCaptchaBase implements ICaptchaService {
 
     @Resource
     private JavaMailSender javaMailSender;
@@ -40,7 +41,7 @@ public class EmailCaptchaServiceImpl extends AbstractCaptchaService implements I
     @Override
     public CaptchaRes generate(CaptchaReq captchaReq, String verify) {
         if (redisCaptchaStore.get("verify:" + verify) == null) {
-            throw new RuntimeException("暂时不能发送邮件");
+            throw new KnowException("邮件暂时不能发送,请重新获取验证码");
         }
         String existKey = "email:" + captchaReq.getEmail();
         if (redisCaptchaStore.hasKey(existKey)) {
@@ -50,7 +51,7 @@ public class EmailCaptchaServiceImpl extends AbstractCaptchaService implements I
             return res;
         }
         String userEmail = captchaReq.getEmail();
-        GenerateResult generate = generate(captchaReq, 4, "email:", 3);
+        GenerateResult generate = doGenerate(captchaReq, 4, "email:", 3);
         String key = generate.getKey();
         String code = generate.getCode();
         try {

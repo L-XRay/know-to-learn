@@ -3,7 +3,7 @@ package com.cqupt.knowtolearn.service.captcha.impl;
 import cn.hutool.core.lang.UUID;
 import com.cqupt.knowtolearn.model.dto.req.CaptchaReq;
 import com.cqupt.knowtolearn.model.dto.res.CaptchaRes;
-import com.cqupt.knowtolearn.service.captcha.AbstractCaptchaService;
+import com.cqupt.knowtolearn.service.captcha.AbstractCaptchaBase;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
 import com.cqupt.knowtolearn.utils.EncryptUtil;
@@ -23,7 +23,7 @@ import java.io.IOException;
  * @description
  */
 @Service("picCaptchaService")
-public class PicCaptchaServiceImpl extends AbstractCaptchaService implements ICaptchaService {
+public class PicCaptchaBaseImpl extends AbstractCaptchaBase implements ICaptchaService {
 
     @Resource
     private DefaultKaptcha captcha;
@@ -33,7 +33,7 @@ public class PicCaptchaServiceImpl extends AbstractCaptchaService implements ICa
 
     @Override
     public CaptchaRes generate(CaptchaReq captchaReq, String verify) {
-        GenerateResult generate = generate(captchaReq, 4, "captcha:", 3);
+        GenerateResult generate = doGenerate(captchaReq, 4, "captcha:", 3);
         String key = generate.getKey();
         String code = generate.getCode();
         String pic = createPic(code);
