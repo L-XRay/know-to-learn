@@ -38,3 +38,4 @@ cert/rsa/
 *.pem
 
 src/main/resources/static/
+.DS_Store
