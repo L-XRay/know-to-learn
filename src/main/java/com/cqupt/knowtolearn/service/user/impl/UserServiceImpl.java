@@ -8,6 +8,7 @@ import com.cqupt.knowtolearn.model.dto.UserDTO;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
+import com.cqupt.knowtolearn.model.vo.UserVO;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import com.cqupt.knowtolearn.service.user.IUserService;
 import com.cqupt.knowtolearn.service.user.impl.login.LoginStrategy;
@@ -91,20 +92,55 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         return authServiceMap.get(req.getType()).auth(req);
     }
 
-    private LoginRes getLoginRes(User user) {
-        Map<String,Object> map = new HashMap<>();
-        String username = user.getUsername();
-        String nickname = user.getNickname();
-        String email = user.getEmail();
-        String avatar = user.getAvatar();
-        map.put("username", username);
-        map.put("email", email);
-        map.put("nickname", nickname);
-        map.put("avatar", nickname);
-        String token = jwtUtil.encodeToken(map);
-        UserDTO userDTO = new UserDTO(username, nickname,avatar, email);
-        LoginRes res = new LoginRes(userDTO, token);
-//        UserHolder.saveUser(res);
-        return res;
+//    private LoginRes getLoginRes(User user) {
+//        Map<String,Object> map = new HashMap<>();
+//        String username = user.getUsername();
+//        String nickname = user.getNickname();
+//        String email = user.getEmail();
+//        String avatar = user.getAvatar();
+//        String role = user.getRole();
+//        map.put("username", username);
+//        map.put("email", email);
+//        map.put("nickname", nickname);
+//        map.put("avatar", nickname);
+//        map.put("role",role);
+//        String token = jwtUtil.encodeToken(map);
+//        UserDTO userDTO = new UserDTO(username, nickname,avatar, email,role);
+//        LoginRes res = new LoginRes(userDTO, token);
+////        UserHolder.saveUser(res);
+//        return res;
+//    }
+
+    @Override
+    public UserVO findUserByUsername(String username) {
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        if (user==null) {
+            throw new KnowException("用户不存在");
+        }
+        UserVO userVO = new UserVO();
+        userVO.setId(user.getId());
+        userVO.setAvatar(user.getAvatar());
+        userVO.setEmail(user.getEmail());
+        userVO.setNickname(user.getNickname());
+        userVO.setPassword(user.getPassword());
+        userVO.setUsername(user.getUsername());
+        userVO.setRole(user.getRole());
+        userVO.setSalt(user.getSalt());
+        userVO.setCompanyId(user.getCompanyId());
+        return userVO;
+    }
+
+    @Override
+    public void updatePassword(String username, String inputPassword) {
+        try {
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+            String salt = passwordUtil.generateSalt();
+            String encryptPassword = passwordUtil.encryptPassword(inputPassword, salt);
+            user.setPassword(encryptPassword);
+            user.setSalt(salt);
+            userDao.updateById(user);
+        } catch (Exception e) {
+            throw new KnowException("修改密码失败");
+        }
     }
 }

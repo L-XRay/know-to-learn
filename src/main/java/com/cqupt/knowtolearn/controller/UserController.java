@@ -3,15 +3,15 @@ package com.cqupt.knowtolearn.controller;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
+import com.cqupt.knowtolearn.model.vo.UserVO;
 import com.cqupt.knowtolearn.service.user.IUserService;
+import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author Ray
@@ -25,6 +25,9 @@ public class UserController {
     @Resource
     private IUserService userService;
 
+    @Resource
+    private JwtUtil jwtUtil;
+
     @PostMapping("/login")
     public Result login(HttpServletRequest request, @RequestBody LoginReq loginReq) {
         LoginRes res = userService.login(loginReq);
@@ -36,4 +39,23 @@ public class UserController {
         return Result.fail("登录失败");
     }
 
+    @GetMapping("/personal")
+    public Result get(HttpServletRequest request) {
+        String token = request.getHeader("Authorization").substring(7);
+        String username = (String) jwtUtil.decodeToken(token).get("username");
+        UserVO user = userService.findUserByUsername(username);
+        if (user != null) {
+            return Result.success("获取个人信息成功", user);
+        }
+        return Result.fail("获取个人信息失败");
+    }
+
+    @PostMapping("/update/password")
+    public Result updatePassword(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String password = req.get("password");
+        String token = request.getHeader("Authorization").substring(7);
+        String username = (String) jwtUtil.decodeToken(token).get("username");
+        userService.updatePassword(username,password);
+        return Result.success(200,"修改密码成功");
+    }
 }

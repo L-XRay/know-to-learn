@@ -26,11 +26,6 @@ public class User implements Serializable {
 
     private String password;
 
-    /**
-     * 微信unionid
-     */
-    private String wxUnionid;
-
     private String nickname;
 
     /**
@@ -51,6 +46,9 @@ public class User implements Serializable {
     private String qq;
 
     private String salt;
+
+    private String role;
+
     /**
      * 用户状态
      */

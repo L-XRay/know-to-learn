@@ -1,35 +1,32 @@
-package com.cqupt.knowtolearn.model.dto;
+package com.cqupt.knowtolearn.model.vo;
 
 /**
  * @author Ray
- * @date 2023/7/27 08:46
+ * @date 2023/7/28 19:37
  * @description
  */
-public class UserDTO {
+public class UserVO {
 
     private Integer id;
 
     private String username;
 
+    private String password;
+
     private String nickname;
 
+    /**
+     * 头像
+     */
     private String avatar;
 
-    private String role;
+    private String companyId;
 
     private String email;
 
-    public UserDTO() {
-    }
+    private String salt;
 
-    public UserDTO(Integer id, String username, String nickname, String avatar, String email,String role) {
-        this.id = id;
-        this.username = username;
-        this.nickname = nickname;
-        this.avatar = avatar;
-        this.email = email;
-        this.role = role;
-    }
+    private String role;
 
     public Integer getId() {
         return id;
@@ -45,6 +42,14 @@ public class UserDTO {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getNickname() {
@@ -63,12 +68,28 @@ public class UserDTO {
         this.avatar = avatar;
     }
 
+    public String getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(String companyId) {
+        this.companyId = companyId;
+    }
+
     public String getEmail() {
         return email;
     }
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getSalt() {
+        return salt;
+    }
+
+    public void setSalt(String salt) {
+        this.salt = salt;
     }
 
     public String getRole() {

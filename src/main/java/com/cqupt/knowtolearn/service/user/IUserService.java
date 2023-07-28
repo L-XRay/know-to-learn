@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
+import com.cqupt.knowtolearn.model.vo.UserVO;
 
 /**
 * @author Ray
@@ -13,4 +14,8 @@ import com.cqupt.knowtolearn.model.dto.res.LoginRes;
 public interface IUserService {
 
     LoginRes login(LoginReq req);
+
+    UserVO findUserByUsername(String username);
+
+    void updatePassword(String username, String password);
 }
