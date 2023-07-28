@@ -4,13 +4,16 @@ import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
 import com.cqupt.knowtolearn.model.vo.UserVO;
+import com.cqupt.knowtolearn.service.system.CosService;
 import com.cqupt.knowtolearn.service.user.IUserService;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
+import com.qcloud.cos.http.HttpMethodName;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.util.Map;
 
 /**
@@ -27,6 +30,9 @@ public class UserController {
 
     @Resource
     private JwtUtil jwtUtil;
+
+    @Resource
+    private CosService cosService;
 
     @PostMapping("/login")
     public Result login(HttpServletRequest request, @RequestBody LoginReq loginReq) {
@@ -57,5 +63,14 @@ public class UserController {
         String username = (String) jwtUtil.decodeToken(token).get("username");
         userService.updatePassword(username,password);
         return Result.success(200,"修改密码成功");
+    }
+
+    @PostMapping("/upload/avatar")
+    public Result uploadAvatar(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String suffix = req.get("suffix");
+        String token = request.getHeader("Authorization").substring(7);
+        String username = (String) jwtUtil.decodeToken(token).get("username");
+        URL signature = cosService.getAvatarSignature(HttpMethodName.PUT, username, suffix);
+        return Result.success("获取COS签名URL成功",signature);
     }
 }

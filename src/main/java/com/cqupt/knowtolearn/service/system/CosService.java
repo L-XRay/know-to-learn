@@ -78,7 +78,7 @@ public class CosService {
         return new COSClient(cred, clientConfig);
     }
 
-    public URL getSignature(HttpMethodName httpMethodName, CosReq cosReq) {
+    public URL getAvatarSignature(HttpMethodName httpMethodName,String username,String suffix) {
         Map<String, Object> credential = getCredential();
         String secretId = credential.get("secretId").toString();
         String secretKey = credential.get("secretKey").toString();
@@ -87,27 +87,27 @@ public class CosService {
 
         String bucketName = cosConfig.getBucket();
 
-        // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)
-        String key = cosReq.getFileName();
+//        // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)
+//        String key = cosReq.getFileName();
 
-        if ("PUT".equals(cosReq.getType())) {
-            key = getPath(cosReq.getSuffix());
-        }
+//        if ("PUT".equals(cosReq.getType())) {
+          String key = getPath(suffix);
+//        }
 
-        if ("user".equals(cosReq.getRegion())) {
-            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, cosReq.getId()));
-            if ("PUT".equals(cosReq.getType())) {
-                user.setAvatar(key);
+//        if ("user".equals(cosReq.getRegion())) {
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+            if (HttpMethodName.PUT == httpMethodName) {
+                user.setAvatar(cosConfig.getVisitUrl() + key);
             }
-            if ("DELETE".equals(cosReq.getType())){
+            if (HttpMethodName.DELETE == httpMethodName){
                 user.setAvatar(null);
             }
             userDao.updateById(user);
-        }
+//        }
 
-        if ("course".equals(cosReq.getRegion())) {
-            // TODO 课程
-        }
+//        if ("course".equals(cosReq.getRegion())) {
+//            // TODO 课程
+//        }
 
         // 设置签名过期时间(可选), 若未进行设置则默认使用 ClientConfig 中的签名过期时间(1小时)
         // 这里设置签名在半个小时后过期

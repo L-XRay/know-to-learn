@@ -40,7 +40,8 @@ public class WebConfig implements WebMvcConfigurer {
                 .excludePathPatterns(
                         "/user/login",
                         "/captcha/**",
-                        "/chief/**").order(1);
+                        "/chief/**",
+                        "/course/recommendation").order(1);
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate,jwtUtil))
                 .addPathPatterns("/**").order(0);
     }

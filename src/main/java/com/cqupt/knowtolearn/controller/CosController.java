@@ -34,15 +34,15 @@ public class CosController {
     @PostMapping("/getSignature")
     public Result getSignatureUp(HttpServletRequest request,@RequestBody CosReq cosReq) {
         URL signature = null;
-        if ("PUT".equals(cosReq.getType())) {
-            signature = cosService.getSignature(HttpMethodName.PUT,cosReq);
-        }
-        if ("GET".equals(cosReq.getType())) {
-            signature = cosService.getSignature(HttpMethodName.GET,cosReq);
-        }
-        if ("DELETE".equals(cosReq.getType())) {
-            signature = cosService.getSignature(HttpMethodName.DELETE,cosReq);
-        }
+//        if ("PUT".equals(cosReq.getType())) {
+//            signature = cosService.getSignature(HttpMethodName.PUT,cosReq);
+//        }
+//        if ("GET".equals(cosReq.getType())) {
+//            signature = cosService.getSignature(HttpMethodName.GET,cosReq);
+//        }
+//        if ("DELETE".equals(cosReq.getType())) {
+//            signature = cosService.getSignature(HttpMethodName.DELETE,cosReq);
+//        }
         return Result.success("获取cos签名URL成功",signature);
     }
 

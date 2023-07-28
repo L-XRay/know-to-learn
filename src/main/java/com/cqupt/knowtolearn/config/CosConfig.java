@@ -30,6 +30,9 @@ public class CosConfig {
     @Value("${cos.region}")
     private String region;
 
+    @Value("${cos.visit-url}")
+    private String visitUrl;
+
     public String getSecretId() {
         return secretId;
     }
@@ -48,6 +51,10 @@ public class CosConfig {
 
     public String getRegion() {
         return region;
+    }
+
+    public String getVisitUrl() {
+        return visitUrl;
     }
 
     public TreeMap<String,Object> getConfig() {
