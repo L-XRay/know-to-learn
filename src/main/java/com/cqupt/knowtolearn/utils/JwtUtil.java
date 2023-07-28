@@ -1,9 +1,7 @@
 package com.cqupt.knowtolearn.utils;
 
 import com.cqupt.knowtolearn.exception.KnowException;
-import io.fusionauth.jwt.JWTExpiredException;
-import io.fusionauth.jwt.Signer;
-import io.fusionauth.jwt.Verifier;
+import io.fusionauth.jwt.*;
 import io.fusionauth.jwt.domain.JWT;
 import io.fusionauth.jwt.rsa.RSASigner;
 import io.fusionauth.jwt.rsa.RSAVerifier;
@@ -90,8 +88,8 @@ public class JwtUtil {
             if(jwt.isExpired()) {
                 return null;
             }
-        } catch (Exception e) {
-            throw new KnowException("token 已过期.");
+        } catch (JWTExpiredException | InvalidJWTException e) {
+            throw e;
         }
 
         return jwt.getAllClaims();
@@ -102,8 +100,8 @@ public class JwtUtil {
         JWT jwt = null;
         try {
             jwt = JWT.getDecoder().decode(token, verifier);
-        } catch (JWTExpiredException e) {
-            throw new KnowException("token不存在或已过期.");
+        } catch (JWTExpiredException | InvalidJWTException e) {
+            throw e;
         }
         return jwt.isExpired();
     }
@@ -116,10 +114,10 @@ public class JwtUtil {
             jwt = JWT.getDecoder().decode(token, verifier);
             // 如果原始令牌已过期，则拒绝续期
             if (jwt.isExpired()) {
-                throw new KnowException("不能续签已过期的token.");
+                throw new JWTExpiredException();
             }
         } catch (JWTExpiredException e) {
-            throw new KnowException("不能续签已过期或不存在的token.");
+            throw e;
         }
 
         // 更新令牌的过期时间

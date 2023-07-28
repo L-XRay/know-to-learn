@@ -7,9 +7,17 @@ package com.cqupt.knowtolearn.exception;
  */
 public class KnowException extends RuntimeException {
 
+    private Integer code;
+
     private String exception;
 
     public KnowException() {
+    }
+
+    public KnowException(Integer code, String message) {
+        super(message);
+        this.code = code;
+        this.exception = message;
     }
 
     public KnowException(String message) {

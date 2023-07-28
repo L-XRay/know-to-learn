@@ -81,8 +81,8 @@ public class SnowFlake {
         if ( workerId>maxWorkerId || workerId < 0) {
             throw new IllegalArgumentException(String.format("机器ID 大于最大值 %d 或者 小于 0",maxWorkerId));
         }
-        logger.info("机器启动中: 时间戳偏移量:{},机房ID占位:{},机器ID占位:{},序列号占位:{},机器ID:{}",
-                timestampLeftShift,dataCenterIdBits,workerIdBits,sequenceBits,workerId);
+//        logger.info("机器启动中: 时间戳偏移量:{},机房ID占位:{},机器ID占位:{},序列号占位:{},机器ID:{}",
+//                timestampLeftShift,dataCenterIdBits,workerIdBits,sequenceBits,workerId);
         this.dataCenterId = dataCenterId;
         this.workerId = workerId;
         this.sequence = sequence;

@@ -1,6 +1,10 @@
-package com.cqupt.knowtolearn.exception;
+package com.cqupt.knowtolearn.exception.handler;
 
 import com.cqupt.knowtolearn.common.Result;
+import com.cqupt.knowtolearn.exception.KnowException;
+import io.fusionauth.jwt.InvalidJWTException;
+import io.fusionauth.jwt.JWTException;
+import io.fusionauth.jwt.JWTExpiredException;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +29,15 @@ public class GlobalExceptionHandler {
     public Result captureException(KnowException e) {
         logger.error("操作异常: {}",e.getException(),e);
         return Result.fail(500,e.getException());
+    }
+
+    @ExceptionHandler({JWTExpiredException.class,
+            JWTException.class,
+            InvalidJWTException.class})
+    @ResponseStatus(HttpStatus.OK)
+    public Result captureJwtException(JWTExpiredException e) {
+        logger.error("token 异常: {}",e.getMessage(),e);
+        return Result.fail(666,"token不存在或已过期.");
     }
 
     @ExceptionHandler(Exception.class)
