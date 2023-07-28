@@ -10,10 +10,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -26,33 +23,33 @@ public class SystemController {
 
     private static final Map<String, String> nameMap = new HashMap<>();
     static {
+        nameMap.put("xr","夏瑞");
+        nameMap.put("ysq", "易诗淇");
         nameMap.put("ltt", "李恬恬");
         nameMap.put("zly", "周玲瑶");
         nameMap.put("ljd","赖建东");
-        nameMap.put("xr","夏瑞");
-        nameMap.put("ysq", "易诗淇");
         nameMap.put("zyq", "曾艳琦");
     }
 
     @GetMapping("/chief/get")
     public Result getChief(HttpServletRequest request) {
-        List<String> fileNames = null;
-        try {
-            // 获取 static 目录的绝对路径
-            String staticPath = this.getClass().getResource("/static").toURI().getPath();
-
-            // 通过静态资源目录的绝对路径构建 Path 对象
-            Path staticDir = Paths.get(staticPath);
-
-            // 获取 static 目录下的所有文件名
-            fileNames = Files.walk(staticDir)
-                    .filter(Files::isRegularFile)
-                    .map(Path::getFileName)
-                    .map(Path::toString)
-                    .collect(Collectors.toList());
-        } catch (URISyntaxException | IOException e) {
-            throw new KnowException("无法获取主创人员信息");
-        }
+//        List<String> fileNames = null;
+//        try {
+//            // 获取 static 目录的绝对路径
+//            String staticPath = this.getClass().getResource("/static").toURI().getPath();
+//
+//            // 通过静态资源目录的绝对路径构建 Path 对象
+//            Path staticDir = Paths.get(staticPath);
+//
+//            // 获取 static 目录下的所有文件名
+//            fileNames = Files.walk(staticDir)
+//                    .filter(Files::isRegularFile)
+//                    .map(Path::getFileName)
+//                    .map(Path::toString)
+//                    .collect(Collectors.toList());
+//        } catch (URISyntaxException | IOException e) {
+//            throw new KnowException("无法获取主创人员信息");
+//        }
 
         List<Map<String,String>> list = new ArrayList<>();
 
@@ -66,6 +63,8 @@ public class SystemController {
         // http://127.0.0.1:8090/chief/
         String baseUrl = url.substring(0, url.indexOf(uri) + uri.length()-3);
 
+        List<String> fileNames = Arrays.asList("xr.jpg", "ysq.jpg", "ltt.jpg", "zly.jpg", "ljd.jpg", "zyq.jpg");
+
         // 打印所有文件名
         for (String fileName : fileNames) {
             String prefix = fileName.split("\\.")[0];
@@ -77,4 +76,5 @@ public class SystemController {
         }
         return Result.success("获取主创人员信息成功",list);
     }
+
 }
