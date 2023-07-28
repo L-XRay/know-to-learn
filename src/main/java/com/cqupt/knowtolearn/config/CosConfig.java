@@ -30,6 +30,25 @@ public class CosConfig {
     @Value("${cos.region}")
     private String region;
 
+    public String getSecretId() {
+        return secretId;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public Integer getDurationSeconds() {
+        return durationSeconds;
+    }
+
+    public String getBucket() {
+        return bucket;
+    }
+
+    public String getRegion() {
+        return region;
+    }
 
     public TreeMap<String,Object> getConfig() {
         TreeMap<String, Object> config = new TreeMap<>();
@@ -73,4 +92,5 @@ public class CosConfig {
         }
         return config;
     }
+
 }
