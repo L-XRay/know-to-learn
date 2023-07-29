@@ -13,12 +13,15 @@ public class LoginRes {
 
     private String token;
 
+    private String refreshToken;
+
     public LoginRes() {
     }
 
-    public LoginRes(UserDTO userInfo, String token) {
+    public LoginRes(UserDTO userInfo, String token, String refreshToken) {
         this.userInfo = userInfo;
         this.token = token;
+        this.refreshToken = refreshToken;
     }
 
     public UserDTO getUserInfo() {
@@ -35,5 +38,13 @@ public class LoginRes {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getRefreshToken() {
+        return refreshToken;
+    }
+
+    public void setRefreshToken(String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 }

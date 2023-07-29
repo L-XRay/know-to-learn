@@ -9,6 +9,7 @@ import com.cqupt.knowtolearn.model.dto.res.LoginRes;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.PasswordUtil;
+import com.cqupt.knowtolearn.utils.UserHolder;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -48,10 +49,10 @@ public abstract class AbstractAuthBase implements IAuthService {
 //        map.put("nickname", nickname);
 //        map.put("avatar", avatar);
 //        map.put("role",role);
-        String token = jwtUtil.encodeToken(map);
+        Map<String, String> token = jwtUtil.generateToken(map);
         UserDTO userDTO = new UserDTO(user.getId(), username, nickname,avatar, email,role);
-        LoginRes res = new LoginRes(userDTO, token);
-//        UserHolder.saveUser(res);
+        LoginRes res = new LoginRes(userDTO, token.get("accessToken"), token.get("refreshToken"));
+        UserHolder.saveUser(user.getId());
         return res;
     }
 

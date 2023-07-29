@@ -16,7 +16,9 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Ray
@@ -32,8 +34,11 @@ public class JwtUtil {
     @Value("${jwt.rsa-private-key-path}")
     private String rsaPrivateKeyPath;
 
-    @Value("${jwt.ttl}")
-    private int ttl;
+    @Value("${jwt.accessTtl}")
+    private int accessTtl;
+
+    @Value("${jwt.refreshTtl}")
+    private int refreshTtl;
 
     @Autowired
     private ResourceLoader resourceLoader;
@@ -61,7 +66,16 @@ public class JwtUtil {
         return null;
     }
 
-    public String encodeToken(Map<String, Object> payload) {
+    public Map<String,String> generateToken(Map<String, Object> payload) {
+        String accessToken = accessToken(payload);
+        String refreshToken = refreshToken(payload);
+        Map<String,String> map = new ConcurrentHashMap<>();
+        map.put("accessToken",accessToken);
+        map.put("refreshToken",refreshToken);
+        return map;
+    }
+
+    public String accessToken(Map<String, Object> payload) {
         String privateKey = getRsaPrivateKey();
         if (privateKey == null) {
             throw new KnowException("私钥不可用");
@@ -70,11 +84,45 @@ public class JwtUtil {
 
         JWT jwt = new JWT()
                 .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))  // 设置签发时间
-                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(ttl)); // 设置超时时间
+                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(accessTtl)); // 设置超时时间
 
         for(Map.Entry<String, Object> entry : payload.entrySet()){
             jwt.addClaim(entry.getKey(), entry.getValue());
         }
+
+        return JWT.getEncoder().encode(jwt, signer);
+    }
+
+    public String refreshToken(Map<String, Object> payload) {
+        String privateKey = getRsaPrivateKey();
+        if (privateKey == null) {
+            throw new KnowException("私钥不可用");
+        }
+        Signer signer = RSASigner.newSHA256Signer(getRsaPrivateKey()); // 用私钥签名
+
+        JWT jwt = new JWT()
+                .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))  // 设置签发时间
+                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(refreshTtl)); // 设置超时时间
+
+        for(Map.Entry<String, Object> entry : payload.entrySet()){
+            jwt.addClaim(entry.getKey(), entry.getValue());
+        }
+
+        return JWT.getEncoder().encode(jwt, signer);
+    }
+
+    public String refreshToken(String accessToken) {
+        String privateKey = getRsaPrivateKey();
+        if (privateKey == null) {
+            throw new KnowException("私钥不可用");
+        }
+        Signer signer = RSASigner.newSHA256Signer(getRsaPrivateKey()); // 用私钥签名
+
+        JWT jwt = new JWT()
+                .setIssuedAt(ZonedDateTime.now(ZoneOffset.UTC))  // 设置签发时间
+                .setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(refreshTtl)); // 设置超时时间
+
+        jwt.addClaim("accessToken", accessToken);
 
         return JWT.getEncoder().encode(jwt, signer);
     }
@@ -106,7 +154,7 @@ public class JwtUtil {
         return jwt.isExpired();
     }
 
-    public String refreshToken(String token) {
+    public String renewalToken(String token) {
         // 首先验证原始令牌
         Verifier verifier = RSAVerifier.newVerifier(getRsaPublicKey());
         JWT jwt = null;
@@ -121,10 +169,11 @@ public class JwtUtil {
         }
 
         // 更新令牌的过期时间
-        jwt.setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(ttl));
+        jwt.setExpiration(ZonedDateTime.now(ZoneOffset.UTC).plusMinutes(accessTtl));
         // 重新签名令牌
         Signer signer = RSASigner.newSHA256Signer(getRsaPrivateKey());
         return JWT.getEncoder().encode(jwt, signer);
     }
+
 
 }

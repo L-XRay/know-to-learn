@@ -15,12 +15,14 @@ public interface IUserService {
 
     LoginRes login(LoginReq req);
 
-    UserVO findUserByUsername(String token);
+    UserVO findUserByUserId(Integer userId);
 
-    void updatePassword(String token, String password);
+    void updatePassword(Integer userId, String password);
 
-    UserVO updateUsername(String token, String username);
+    UserVO updateUsername(Integer userId, String username);
 
-    UserVO updateNickname(String token, String nickname);
+    UserVO updateNickname(Integer userId, String nickname);
+
+    User findUserByUsername(String username);
 
 }

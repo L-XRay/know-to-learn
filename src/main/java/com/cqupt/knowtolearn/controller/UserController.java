@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.controller;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
+import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.UserVO;
 import com.cqupt.knowtolearn.service.system.CosService;
 import com.cqupt.knowtolearn.service.user.IUserService;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -47,8 +49,8 @@ public class UserController {
 
     @GetMapping("/personal")
     public Result get(HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        UserVO user = userService.findUserByUsername(token);
+//        String token = request.getHeader("Authorization").substring(7);
+        UserVO user = userService.findUserByUserId(UserHolder.getUser());
         if (user != null) {
             return Result.success("获取个人信息成功", user);
         }
@@ -58,24 +60,24 @@ public class UserController {
     @PostMapping("/update/password")
     public Result updatePassword(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String password = req.get("password");
-        String token = request.getHeader("Authorization").substring(7);
-        userService.updatePassword(token,password);
+//        String token = request.getHeader("Authorization").substring(7);
+        userService.updatePassword(UserHolder.getUser(),password);
         return Result.success(200,"修改密码成功");
     }
 
     @PostMapping("/update/username")
     public Result updateUsername(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String username = req.get("username");
-        String token = request.getHeader("Authorization").substring(7);
-        userService.updateUsername(token,username);
+//        String token = request.getHeader("Authorization").substring(7);
+        userService.updateUsername(UserHolder.getUser(),username);
         return Result.success(200,"修改用户名成功");
     }
 
     @PostMapping("/update/nickname")
     public Result updateNickname(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String nickname = req.get("nickname");
-        String token = request.getHeader("Authorization").substring(7);
-        userService.updateNickname(token,nickname);
+//        String token = request.getHeader("Authorization").substring(7);
+        userService.updateNickname(UserHolder.getUser(),nickname);
         return Result.success(200,"修改昵称成功");
     }
 
@@ -86,5 +88,21 @@ public class UserController {
         String userId = (String) jwtUtil.decodeToken(token).get("id");
         URL signature = cosService.getAvatarSignature(HttpMethodName.PUT, Integer.valueOf(userId), suffix);
         return Result.success("获取COS签名URL成功",signature);
+    }
+
+    @PostMapping("/refresh/token")
+    public Result refreshToken(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String refreshToken = req.get("refreshToken");
+        String id = (String) jwtUtil.decodeToken(refreshToken).get("id");
+//        if (UserHolder.getUser().equals(username)) {
+//            User user = userService.findUserByUsername(username);
+            Map<String,Object> map = new HashMap<>();
+//            String id = String.valueOf(user.getId());
+            map.put("id",id);
+//            map.put("username", username);
+            Map<String, String> token = jwtUtil.generateToken(map);
+            return Result.success("刷新token成功",token);
+//        }
+//        return Result.fail("刷新token失败");
     }
 }

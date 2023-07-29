@@ -112,8 +112,8 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
 //    }
 
     @Override
-    public UserVO findUserByUsername(String token) {
-        Integer userId = getCurrentUserId(token);
+    public UserVO findUserByUserId(Integer userId) {
+//        Integer userId = getCurrentUserId(token);
         User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
         if (user==null) {
             throw new KnowException("用户不存在");
@@ -132,8 +132,8 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
     }
 
     @Override
-    public void updatePassword(String token, String inputPassword) {
-        Integer userId = getCurrentUserId(token);
+    public void updatePassword(Integer userId, String inputPassword) {
+//        Integer userId = getCurrentUserId(token);
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             String salt = passwordUtil.generateSalt();
@@ -147,8 +147,8 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
     }
 
     @Override
-    public UserVO updateUsername(String token, String username) {
-        Integer userId = getCurrentUserId(token);
+    public UserVO updateUsername(Integer userId, String username) {
+//        Integer userId = getCurrentUserId(token);
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             user.setUsername(username);
@@ -160,8 +160,8 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
     }
 
     @Override
-    public UserVO updateNickname(String token, String nickname) {
-        Integer userId = getCurrentUserId(token);
+    public UserVO updateNickname(Integer userId, String nickname) {
+//        Integer userId = getCurrentUserId(token);
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             user.setNickname(nickname);
@@ -175,5 +175,11 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
     private Integer getCurrentUserId(String token) {
         String id = (String) jwtUtil.decodeToken(token).get("id");
         return Integer.valueOf(id);
+    }
+
+    @Override
+    public User findUserByUsername(String username) {
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+        return user;
     }
 }

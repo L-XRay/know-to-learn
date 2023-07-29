@@ -9,14 +9,13 @@ import com.cqupt.knowtolearn.model.po.user.User;
  * @description
  */
 public class UserHolder {
-    private static final ThreadLocal<LoginRes> userThreadLocal = new ThreadLocal<>();
-    private static ThreadLocal<String> userAgentThreadLocal = new ThreadLocal<>();
+    private static final ThreadLocal<Integer> userThreadLocal = new ThreadLocal<>();
 
-    public static void saveUser(LoginRes user){
+    public static void saveUser(Integer user){
         userThreadLocal.set(user);
     }
 
-    public static LoginRes getUser(){
+    public static Integer getUser(){
         return userThreadLocal.get();
     }
 
@@ -24,15 +23,4 @@ public class UserHolder {
         userThreadLocal.remove();
     }
 
-    public static void saveUserAgent(String userAgent){
-        userAgentThreadLocal.set(userAgent);
-    }
-
-    public static String getUserAgent(){
-        return userAgentThreadLocal.get();
-    }
-
-    public static void removeUserAgent(){
-        userAgentThreadLocal.remove();
-    }
 }

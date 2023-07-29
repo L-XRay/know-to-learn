@@ -40,16 +40,18 @@ public class RefreshTokenInterceptor implements HandlerInterceptor {
         if (isExpired) {
             return true;
         }
+
+        String userId = (String) jwtUtil.decodeToken(token).get("id");
 //        LoginRes res = new LoginRes();
 //        res.setUsername((String) map.get("username"));
 //        res.setNickname((String) map.get("nickname"));
 //        res.setEmail((String) map.get("email"));
         // 刷新有效期
-        String currentToken = jwtUtil.refreshToken(token);
+        String currentToken = jwtUtil.renewalToken(token);
         response.setHeader("Authorization","Bearer " + currentToken);
 //        res.setToken(currentToken);
         // 保存用户
-//        UserHolder.saveUser(res);
+        UserHolder.saveUser(Integer.valueOf(userId));
         return true;
     }
 

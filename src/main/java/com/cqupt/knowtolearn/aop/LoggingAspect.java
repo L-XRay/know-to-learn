@@ -33,16 +33,18 @@ public class LoggingAspect {
 
     @After("execution(* com.cqupt.knowtolearn.controller.*.*(..))")
     public void logBefore(JoinPoint joinPoint) {
-        String username;
+        String useId;
         HttpServletRequest request = findRequestInArgs(joinPoint.getArgs());
         assert request != null;
         if (request.getHeader("Authorization") == null) {
-            username = "未登录用户";
+            useId = "未登录用户";
         } else {
             String token = request.getHeader("Authorization").substring(7);
-            String userId = (String) jwtUtil.decodeToken(token).get("id");
+            useId = (String) jwtUtil.decodeToken(token).get("id");
+//            useId = UserHolder.getUser();
+            // 优化拦截器中添加查询用户名
             // 获取当前用户名
-            username = userDao.selectById(Integer.valueOf(userId)).getUsername();
+            // useId = userDao.selectById(Integer.valueOf(userId)).getUsername();
         }
 
         // 获取浏览器信息
@@ -58,7 +60,7 @@ public class LoggingAspect {
         String url = request.getRequestURL().toString();
 
         // 记录日志
-        logger.info("接口访问信息 - 用户名: {}, 浏览器: {}, URL: {}", username, userAgent, url);
+        logger.info("接口访问信息 - 用户: {}, 浏览器: {}, URL: {}", useId, userAgent, url);
     }
 
     // 辅助方法，获取接口信息
