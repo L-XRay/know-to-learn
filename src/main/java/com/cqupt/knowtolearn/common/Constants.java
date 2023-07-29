@@ -40,4 +40,47 @@ public class Constants {
         }
     }
 
+    /**
+     * 课程状态：1编辑、2提审、3撤审、4通过、5拒绝、6发布
+     */
+    public enum CourseState {
+
+        /** 1：编辑 */
+        EDIT(1, "编辑"),
+        /** 2：提审 */
+        ARRAIGNMENT(2, "提审"),
+        /** 3：撤审 */
+        REVOKE(3, "撤审"),
+        /** 4：通过 */
+        PASS(4, "通过"),
+        /** 5：拒绝 */
+        REFUSE(5, "拒绝"),
+        /** 6：发布 */
+        PUBLISH(6, "发布");
+
+        private Integer code;
+        private String info;
+
+        CourseState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
+
 }

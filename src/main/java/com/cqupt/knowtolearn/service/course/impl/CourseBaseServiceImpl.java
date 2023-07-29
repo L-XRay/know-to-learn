@@ -1,23 +1,17 @@
 package com.cqupt.knowtolearn.service.course.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
+import com.cqupt.knowtolearn.model.dto.AlterStateDTO;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
-import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 /**
 * @author Ray
@@ -34,5 +28,17 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
     @Override
     public List<HomeCourseVO> getHomeCourse() {
         return courseBaseDao.randCourse();
+    }
+
+    @Override
+    public boolean alterStatus(Integer courseId, Enum<Constants.CourseState> beforeState, Enum<Constants.CourseState> afterState) {
+        AlterStateDTO req = new AlterStateDTO(courseId,((Constants.CourseState)beforeState).getCode(),((Constants.CourseState)afterState).getCode());
+        int count = courseBaseDao.alterState(req);
+        return 1 == count;
+    }
+
+    @Override
+    public CourseBase selectOneById(Integer courseId) {
+        return courseBaseDao.selectById(courseId);
     }
 }

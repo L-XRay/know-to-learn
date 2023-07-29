@@ -101,14 +101,9 @@ public class CourseBase implements Serializable {
     private String changePeople;
 
     /**
-     * 审核状态
+     * 课程状态
      */
-    private String auditStatus;
-
-    /**
-     * 课程发布状态 未发布  已发布 下线
-     */
-    private String status;
+    private Integer status;
 
     /**
      * 发布时间

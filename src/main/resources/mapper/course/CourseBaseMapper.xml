@@ -20,7 +20,6 @@
         <result column="change_date" property="changeDate" />
         <result column="create_people" property="createPeople" />
         <result column="change_people" property="changePeople" />
-        <result column="audit_status" property="auditStatus" />
         <result column="status" property="status" />
         <result column="publish_date" property="publishDate"/>
     </resultMap>
@@ -52,4 +51,10 @@
 #         SELECT cb.id id,cb.name name,cb.teachers teachers,cb.pic,cb.publish_date publish_date,c.name org FROM course_base cb inner join company c on cb.company_id = c.id ORDER BY RAND() LIMIT 8
         SELECT cb.id courseId, cb.name courseName,cb.pic coverUrl,UNIX_TIMESTAMP(cb.publish_date) * 1000 publishTime,c.name orgName,c.id orgId FROM course_base cb inner join company c on cb.company_id = c.id ORDER BY RAND() LIMIT 8
     </select>
+
+    <update id="alterState" parameterType="com.cqupt.knowtolearn.model.dto.AlterStateDTO">
+        UPDATE course_base
+        SET status = #{afterState}
+        WHERE id = #{courseId} AND status = #{beforeState}
+    </update>
 </mapper>
