@@ -11,11 +11,15 @@ public class HomeCourseVO {
 
     private String coverUrl;
 
+    private Integer courseId;
+
     private String courseName;
+
+    private Integer orgId;
 
     private String orgName;
 
-    private LocalDateTime publishTime;
+    private Long publishTime;
 
     public String getCoverUrl() {
         return coverUrl;
@@ -41,11 +45,27 @@ public class HomeCourseVO {
         this.orgName = orgName;
     }
 
-    public LocalDateTime getPublishTime() {
+    public Long getPublishTime() {
         return publishTime;
     }
 
-    public void setPublishTime(LocalDateTime publishTime) {
+    public void setPublishTime(Long publishTime) {
         this.publishTime = publishTime;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
+    }
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 }

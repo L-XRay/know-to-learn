@@ -1,5 +1,7 @@
 package com.cqupt.knowtolearn.aop;
 
+import com.cqupt.knowtolearn.dao.user.IUserDao;
+import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import org.aspectj.lang.JoinPoint;
@@ -24,6 +26,9 @@ public class LoggingAspect {
     @Resource
     private JwtUtil jwtUtil;
 
+    @Resource
+    private IUserDao userDao;
+
     private static final Logger logger = LoggerFactory.getLogger(LoggingAspect.class);
 
     @After("execution(* com.cqupt.knowtolearn.controller.*.*(..))")
@@ -35,8 +40,9 @@ public class LoggingAspect {
             username = "未登录用户";
         } else {
             String token = request.getHeader("Authorization").substring(7);
+            String userId = (String) jwtUtil.decodeToken(token).get("id");
             // 获取当前用户名
-            username = (String) jwtUtil.decodeToken(token).get("username");
+            username = userDao.selectById(Integer.valueOf(userId)).getUsername();
         }
 
         // 获取浏览器信息

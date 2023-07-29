@@ -48,8 +48,7 @@ public class UserController {
     @GetMapping("/personal")
     public Result get(HttpServletRequest request) {
         String token = request.getHeader("Authorization").substring(7);
-        String username = (String) jwtUtil.decodeToken(token).get("username");
-        UserVO user = userService.findUserByUsername(username);
+        UserVO user = userService.findUserByUsername(token);
         if (user != null) {
             return Result.success("获取个人信息成功", user);
         }
@@ -60,17 +59,32 @@ public class UserController {
     public Result updatePassword(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String password = req.get("password");
         String token = request.getHeader("Authorization").substring(7);
-        String username = (String) jwtUtil.decodeToken(token).get("username");
-        userService.updatePassword(username,password);
+        userService.updatePassword(token,password);
         return Result.success(200,"修改密码成功");
+    }
+
+    @PostMapping("/update/username")
+    public Result updateUsername(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String username = req.get("username");
+        String token = request.getHeader("Authorization").substring(7);
+        userService.updateUsername(token,username);
+        return Result.success(200,"修改用户名成功");
+    }
+
+    @PostMapping("/update/nickname")
+    public Result updateNickname(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String nickname = req.get("nickname");
+        String token = request.getHeader("Authorization").substring(7);
+        userService.updateNickname(token,nickname);
+        return Result.success(200,"修改昵称成功");
     }
 
     @PostMapping("/upload/avatar")
     public Result uploadAvatar(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String suffix = req.get("suffix");
         String token = request.getHeader("Authorization").substring(7);
-        String username = (String) jwtUtil.decodeToken(token).get("username");
-        URL signature = cosService.getAvatarSignature(HttpMethodName.PUT, username, suffix);
+        String userId = (String) jwtUtil.decodeToken(token).get("id");
+        URL signature = cosService.getAvatarSignature(HttpMethodName.PUT, Integer.valueOf(userId), suffix);
         return Result.success("获取COS签名URL成功",signature);
     }
 }

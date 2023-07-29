@@ -11,7 +11,7 @@ public class UserVO {
 
     private String username;
 
-    private String password;
+    private boolean password;
 
     private String nickname;
 
@@ -20,7 +20,7 @@ public class UserVO {
      */
     private String avatar;
 
-    private String companyId;
+    private Integer orgId;
 
     private String email;
 
@@ -44,11 +44,11 @@ public class UserVO {
         this.username = username;
     }
 
-    public String getPassword() {
+    public boolean isPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(boolean password) {
         this.password = password;
     }
 
@@ -68,12 +68,12 @@ public class UserVO {
         this.avatar = avatar;
     }
 
-    public String getCompanyId() {
-        return companyId;
+    public Integer getOrgId() {
+        return orgId;
     }
 
-    public void setCompanyId(String companyId) {
-        this.companyId = companyId;
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
     }
 
     public String getEmail() {

@@ -78,7 +78,7 @@ public class CosService {
         return new COSClient(cred, clientConfig);
     }
 
-    public URL getAvatarSignature(HttpMethodName httpMethodName,String username,String suffix) {
+    public URL getAvatarSignature(HttpMethodName httpMethodName,Integer userId,String suffix) {
         Map<String, Object> credential = getCredential();
         String secretId = credential.get("secretId").toString();
         String secretKey = credential.get("secretKey").toString();
@@ -95,7 +95,7 @@ public class CosService {
 //        }
 
 //        if ("user".equals(cosReq.getRegion())) {
-            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             if (HttpMethodName.PUT == httpMethodName) {
                 user.setAvatar(cosConfig.getVisitUrl() + key);
             }

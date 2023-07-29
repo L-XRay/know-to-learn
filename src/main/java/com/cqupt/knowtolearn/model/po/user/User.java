@@ -33,7 +33,7 @@ public class User implements Serializable {
      */
     private String avatar;
 
-    private String companyId;
+    private Integer companyId;
 
     private LocalDateTime birthday;
 

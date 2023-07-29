@@ -36,20 +36,20 @@ public abstract class AbstractAuthBase implements IAuthService {
 
     protected LoginRes getLoginRes(User user) {
         Map<String,Object> map = new HashMap<>();
-        Integer id = user.getId();
+        String id = String.valueOf(user.getId());
         String username = user.getUsername();
         String nickname = user.getNickname();
         String email = user.getEmail();
         String avatar = user.getAvatar();
         String role = user.getRole();
         map.put("id",id);
-        map.put("username", username);
-        map.put("email", email);
-        map.put("nickname", nickname);
-        map.put("avatar", nickname);
-        map.put("role",role);
+//        map.put("username", username);
+//        map.put("email", email);
+//        map.put("nickname", nickname);
+//        map.put("avatar", avatar);
+//        map.put("role",role);
         String token = jwtUtil.encodeToken(map);
-        UserDTO userDTO = new UserDTO(id, username, nickname,avatar, email,role);
+        UserDTO userDTO = new UserDTO(user.getId(), username, nickname,avatar, email,role);
         LoginRes res = new LoginRes(userDTO, token);
 //        UserHolder.saveUser(res);
         return res;

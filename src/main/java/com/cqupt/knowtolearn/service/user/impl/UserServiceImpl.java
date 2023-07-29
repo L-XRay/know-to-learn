@@ -112,8 +112,9 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
 //    }
 
     @Override
-    public UserVO findUserByUsername(String username) {
-        User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+    public UserVO findUserByUsername(String token) {
+        Integer userId = getCurrentUserId(token);
+        User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
         if (user==null) {
             throw new KnowException("用户不存在");
         }
@@ -122,18 +123,19 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         userVO.setAvatar(user.getAvatar());
         userVO.setEmail(user.getEmail());
         userVO.setNickname(user.getNickname());
-        userVO.setPassword(user.getPassword());
         userVO.setUsername(user.getUsername());
+        userVO.setPassword(user.getPassword()!=null);
         userVO.setRole(user.getRole());
         userVO.setSalt(user.getSalt());
-        userVO.setCompanyId(user.getCompanyId());
+        userVO.setOrgId(user.getCompanyId());
         return userVO;
     }
 
     @Override
-    public void updatePassword(String username, String inputPassword) {
+    public void updatePassword(String token, String inputPassword) {
+        Integer userId = getCurrentUserId(token);
         try {
-            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             String salt = passwordUtil.generateSalt();
             String encryptPassword = passwordUtil.encryptPassword(inputPassword, salt);
             user.setPassword(encryptPassword);
@@ -142,5 +144,36 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         } catch (Exception e) {
             throw new KnowException("修改密码失败");
         }
+    }
+
+    @Override
+    public UserVO updateUsername(String token, String username) {
+        Integer userId = getCurrentUserId(token);
+        try {
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
+            user.setUsername(username);
+            userDao.updateById(user);
+        } catch (Exception e) {
+            throw new KnowException("修改用户名失败");
+        }
+        return null;
+    }
+
+    @Override
+    public UserVO updateNickname(String token, String nickname) {
+        Integer userId = getCurrentUserId(token);
+        try {
+            User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
+            user.setNickname(nickname);
+            userDao.updateById(user);
+        } catch (Exception e) {
+            throw new KnowException("修改昵称失败");
+        }
+        return null;
+    }
+
+    private Integer getCurrentUserId(String token) {
+        String id = (String) jwtUtil.decodeToken(token).get("id");
+        return Integer.valueOf(id);
     }
 }
