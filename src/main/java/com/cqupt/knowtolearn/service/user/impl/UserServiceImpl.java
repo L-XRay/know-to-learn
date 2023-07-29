@@ -140,6 +140,7 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
             String encryptPassword = passwordUtil.encryptPassword(inputPassword, salt);
             user.setPassword(encryptPassword);
             user.setSalt(salt);
+            user.setUpdateTime(LocalDateTime.now());
             userDao.updateById(user);
         } catch (Exception e) {
             throw new KnowException("修改密码失败");
@@ -152,6 +153,7 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             user.setUsername(username);
+            user.setUpdateTime(LocalDateTime.now());
             userDao.updateById(user);
         } catch (Exception e) {
             throw new KnowException("修改用户名失败");
@@ -165,6 +167,7 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
             user.setNickname(nickname);
+            user.setUpdateTime(LocalDateTime.now());
             userDao.updateById(user);
         } catch (Exception e) {
             throw new KnowException("修改昵称失败");

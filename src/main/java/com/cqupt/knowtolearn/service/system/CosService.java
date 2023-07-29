@@ -7,6 +7,7 @@ import com.cqupt.knowtolearn.config.CosConfig;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.exception.KnowException;
 import com.cqupt.knowtolearn.model.dto.req.CosReq;
+import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.utils.DateUtil;
 import com.qcloud.cos.COSClient;
@@ -78,7 +79,7 @@ public class CosService {
         return new COSClient(cred, clientConfig);
     }
 
-    public URL getAvatarSignature(HttpMethodName httpMethodName,Integer userId,String suffix) {
+    public CosRes getAvatarSignature(HttpMethodName httpMethodName, Integer userId, String suffix) {
         Map<String, Object> credential = getCredential();
         String secretId = credential.get("secretId").toString();
         String secretKey = credential.get("secretKey").toString();
@@ -105,6 +106,7 @@ public class CosService {
             userDao.updateById(user);
 //        }
 
+
 //        if ("course".equals(cosReq.getRegion())) {
 //            // TODO 课程
 //        }
@@ -124,8 +126,11 @@ public class CosService {
 
 
         // 请求的 HTTP 方法，上传请求用 PUT，下载请求用 GET，删除请求用 DELETE
-
-        return cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
+        URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
+        CosRes cosRes = new CosRes();
+        cosRes.setRequestURL(url);
+        cosRes.setResourceURL(cosConfig.getVisitUrl() + key);
+        return cosRes;
     }
 
 

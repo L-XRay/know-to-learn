@@ -2,6 +2,7 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
+import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.UserVO;
@@ -86,8 +87,8 @@ public class UserController {
         String suffix = req.get("suffix");
         String token = request.getHeader("Authorization").substring(7);
         String userId = (String) jwtUtil.decodeToken(token).get("id");
-        URL signature = cosService.getAvatarSignature(HttpMethodName.PUT, Integer.valueOf(userId), suffix);
-        return Result.success("获取COS签名URL成功",signature);
+        CosRes cosRes = cosService.getAvatarSignature(HttpMethodName.PUT, Integer.valueOf(userId), suffix);
+        return Result.success("获取COS签名URL成功",cosRes);
     }
 
     @PostMapping("/refresh/token")
