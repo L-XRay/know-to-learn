@@ -127,7 +127,7 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         userVO.setPassword(user.getPassword()!=null);
         userVO.setRole(user.getRole());
         userVO.setSalt(user.getSalt());
-        userVO.setOrgId(user.getCompanyId());
+        userVO.setOrgId(user.getOrgId());
         return userVO;
     }
 

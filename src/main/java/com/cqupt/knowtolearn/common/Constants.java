@@ -83,4 +83,41 @@ public class Constants {
         }
     }
 
+    /**
+     * 机构状态：0待审核、1通过、2拒绝
+     */
+    public enum OrgState {
+
+        /** 0：待审核 */
+        WAIT(0, "待审核"),
+        /** 1：通过 */
+        PASS(1, "通过"),
+        /** 2：拒绝 */
+        REFUSE(2, "拒绝");
+
+        private Integer code;
+        private String info;
+
+        OrgState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
+
 }

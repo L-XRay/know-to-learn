@@ -1,8 +1,9 @@
 package com.cqupt.knowtolearn.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cqupt.knowtolearn.model.po.user.CompanyUser;
+import com.cqupt.knowtolearn.model.po.user.Org;
 import org.apache.ibatis.annotations.Mapper;
+
 
 /**
  * @author Ray
@@ -10,6 +11,6 @@ import org.apache.ibatis.annotations.Mapper;
  * @description  dao 接口
  */
 @Mapper
-public interface ICompanyUserDao extends BaseMapper<CompanyUser> {
+public interface IOrgDao extends BaseMapper<Org> {
 
 }

@@ -107,23 +107,10 @@ public class CosService {
 //        }
 
 
-//        if ("course".equals(cosReq.getRegion())) {
-//            // TODO 课程
-//        }
 
         // 设置签名过期时间(可选), 若未进行设置则默认使用 ClientConfig 中的签名过期时间(1小时)
         // 这里设置签名在半个小时后过期
         Date expirationDate = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
-
-//        // 填写本次请求的参数，需与实际请求相同，能够防止用户篡改此签名的 HTTP 请求的参数
-//        Map<String, String> params = new HashMap<>();
-//        params.put("param1", "value1");
-//
-//
-//        // 填写本次请求的头部，需与实际请求相同，能够防止用户篡改此签名的 HTTP 请求的头部
-//        Map<String, String> headers = new HashMap<String, String>();
-//        headers.put("header1", "value1");
-
 
         // 请求的 HTTP 方法，上传请求用 PUT，下载请求用 GET，删除请求用 DELETE
         URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
@@ -136,6 +123,23 @@ public class CosService {
 
     private String getPath(String suffix) {
         return System.currentTimeMillis() + UUID.randomUUID(false).toString() + "." + suffix;
+    }
+
+    public CosRes getOrgMaterialSignature(HttpMethodName httpMethodName, String suffix) {
+        Map<String, Object> credential = getCredential();
+        String secretId = credential.get("secretId").toString();
+        String secretKey = credential.get("secretKey").toString();
+        String token = credential.get("token").toString();
+        COSClient cosClient = createCosClient(secretId, secretKey, token);
+        String bucketName = cosConfig.getBucket();
+        String key = getPath(suffix);
+        Date expirationDate = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
+        // 请求的 HTTP 方法，上传请求用 PUT，下载请求用 GET，删除请求用 DELETE
+        URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
+        CosRes cosRes = new CosRes();
+        cosRes.setRequestURL(url);
+        cosRes.setResourceURL(cosConfig.getVisitUrl() + key);
+        return cosRes;
     }
 
 }

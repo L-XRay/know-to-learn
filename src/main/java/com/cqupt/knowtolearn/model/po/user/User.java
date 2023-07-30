@@ -28,22 +28,11 @@ public class User implements Serializable {
 
     private String nickname;
 
-    /**
-     * 头像
-     */
     private String avatar;
 
-    private Integer companyId;
-
-    private LocalDateTime birthday;
-
-    private String sex;
+    private Integer orgId;
 
     private String email;
-
-    private String cellphone;
-
-    private String qq;
 
     private String salt;
 
