@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.controller;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
+import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import com.cqupt.knowtolearn.utils.UserHolder;
@@ -41,5 +42,10 @@ public class OrgController {
         return Result.success("获取COS签名URL成功",materialSignature);
     }
 
+    @GetMapping("/org/info")
+    public Result getOrgInfo(HttpServletRequest request) {
+        Map<String,Object> map = orgService.findOwnOrg(UserHolder.getUser());
+        return Result.success("获取机构信息成功",map);
+    }
 
 }

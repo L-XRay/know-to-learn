@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -136,5 +138,17 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public Map<String, Object> findOwnOrg(Integer userId) {
+        User user = userDao.selectById(userId);
+        Org org = orgDao.selectById(user.getOrgId());
+        Map<String,Object> map = new HashMap<>();
+        map.put("id",org.getId());
+        map.put("name",org.getName());
+        map.put("introduction",org.getIntro());
+        map.put("materials",org.getMaterials());
+        return map;
     }
 }

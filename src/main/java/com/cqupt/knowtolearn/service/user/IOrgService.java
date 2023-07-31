@@ -4,8 +4,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
+import org.aspectj.weaver.ast.Or;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author Ray
@@ -21,4 +23,6 @@ public interface IOrgService extends IService<Org> {
     void checkPass(Integer orgId);
 
     void checkRefuse(Integer orgId);
+
+    Map<String,Object> findOwnOrg(Integer userId);
 }
