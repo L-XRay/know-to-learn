@@ -41,7 +41,7 @@ public class User implements Serializable {
     /**
      * 用户状态
      */
-    private String status;
+    private Integer status;
 
     private LocalDateTime createTime;
 

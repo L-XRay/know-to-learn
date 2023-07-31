@@ -1,4 +1,4 @@
-package com.cqupt.knowtolearn.service.system;
+package com.cqupt.knowtolearn.service.system.impl;
 
 import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;

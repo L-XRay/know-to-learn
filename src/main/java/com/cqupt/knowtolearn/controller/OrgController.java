@@ -3,8 +3,7 @@ package com.cqupt.knowtolearn.controller;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
-import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
-import com.cqupt.knowtolearn.service.system.CosService;
+import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import com.qcloud.cos.http.HttpMethodName;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 import java.util.Map;
 
 /**

@@ -120,4 +120,38 @@ public class Constants {
         }
     }
 
+    /**
+     * 机构状态：0未读、1已读
+     */
+    public enum StationMessageState {
+
+        /** 0：未读 */
+        NO_READ(0, "未读"),
+        /** 1：已读 */
+        READ(1, "已读");
+
+        private Integer code;
+        private String info;
+
+        StationMessageState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
 }

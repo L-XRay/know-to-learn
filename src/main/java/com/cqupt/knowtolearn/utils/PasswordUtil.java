@@ -24,6 +24,19 @@ public class PasswordUtil {
         return Base64.getEncoder().encodeToString(salt);
     }
 
+    public String generateRandomPassword() {
+        String numberChars = "0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder password = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            int randomIndex = random.nextInt(numberChars.length());
+            char randomChar = numberChars.charAt(randomIndex);
+            password.append(randomChar);
+        }
+
+        return password.toString();
+    }
+
     // 使用 SHA-256 算法对密码进行加密
     public String encryptPassword(String password,String salt) {
         try {

@@ -13,9 +13,25 @@
         <result column="status" property="status" />
     </resultMap>
 
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="OrgVoMap" type="com.cqupt.knowtolearn.model.vo.OrgVO">
+        <id column="id" property="id" />
+        <result column="orgName" property="orgName" />
+        <result column="username" property="username" />
+        <result column="nickname" property="nickname" />
+        <result column="introduction" property="introduction" />
+        <result column="materials" property="materials" />
+        <result column="createTime" property="createTime" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, name, intro, materials, create_time, status
     </sql>
+
+    <select id="selectPendingOrgList" resultMap="OrgVoMap">
+        select o.id, o.name orgName,u.username, u.nickname,o.intro introduction,o.materials, UNIX_TIMESTAMP(o.create_time)*1000 createTime from org o inner join user u on o.user_id = u.id where o.status = 0
+    </select>
 
 </mapper>

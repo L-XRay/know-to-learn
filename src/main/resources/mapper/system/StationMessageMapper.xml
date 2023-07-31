@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.knowtolearn.dao.system.IStationMessageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cqupt.knowtolearn.model.po.course.CourseBase">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <resultMap id="stationMessageVOMap" type="com.cqupt.knowtolearn.model.vo.StationMessageVO">
+        <result column="content" property="content" />
+        <result column="createTime" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, content, create_time, status
+    </sql>
+
+    <select id="selectNoReadMessage" parameterType="java.lang.Integer" resultMap="stationMessageVOMap" >
+        select content, UNIX_TIMESTAMP(create_time)*1000 createTime from station_message where status = 0 and user_id = #{usedId};
+    </select>
+
+    <update id="updateStationMessageRead" parameterType="java.lang.Integer">
+        update station_message set status = 1 where user_id = #{userId}
+    </update>
+
+</mapper>

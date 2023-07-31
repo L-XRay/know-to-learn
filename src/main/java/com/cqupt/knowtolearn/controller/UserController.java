@@ -4,9 +4,10 @@ import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.LoginReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.dto.res.LoginRes;
-import com.cqupt.knowtolearn.model.po.user.User;
+import com.cqupt.knowtolearn.model.vo.StationMessageVO;
 import com.cqupt.knowtolearn.model.vo.UserVO;
-import com.cqupt.knowtolearn.service.system.CosService;
+import com.cqupt.knowtolearn.service.system.IStationMessageService;
+import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.service.user.IUserService;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import com.cqupt.knowtolearn.utils.UserHolder;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,6 +37,9 @@ public class UserController {
 
     @Resource
     private CosService cosService;
+
+    @Resource
+    private IStationMessageService stationMessageService;
 
     @PostMapping("/login")
     public Result login(HttpServletRequest request, @RequestBody LoginReq loginReq) {
@@ -106,4 +110,11 @@ public class UserController {
 //        }
 //        return Result.fail("刷新token失败");
     }
+
+    @GetMapping("/stationMessage/all")
+    public Result getStationMessage(HttpServletRequest request) {
+        List<StationMessageVO> data = stationMessageService.listNoReadMessage(UserHolder.getUser());
+        return Result.success("获取站内信成功",data);
+    }
+
 }

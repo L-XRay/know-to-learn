@@ -2,8 +2,11 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.exception.KnowException;
+import com.cqupt.knowtolearn.model.vo.OrgVO;
+import com.cqupt.knowtolearn.service.user.IOrgService;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -20,6 +23,9 @@ import java.util.stream.Collectors;
  */
 @RestController
 public class SystemController {
+
+    @Resource
+    private IOrgService orgService;
 
     private static final Map<String, String> nameMap = new HashMap<>();
     static {
@@ -75,6 +81,27 @@ public class SystemController {
             list.add(map);
         }
         return Result.success("获取主创人员信息成功",list);
+    }
+
+    @GetMapping("/admin/pending/org")
+    public Result getPendingOrgList(HttpServletRequest request) {
+        List<OrgVO> pendingOrgList = orgService.getPendingOrgList();
+        if (pendingOrgList==null || pendingOrgList.size()==0) {
+            return Result.success(200,"不存在未处理的机构申请");
+        }
+        return Result.success("获取未处理的机构申请成功",pendingOrgList);
+    }
+
+    @PutMapping("/admin/checkPass/org/{orgId}")
+    public Result checkPassOrg(HttpServletRequest request,@PathVariable("orgId") Integer orgId) {
+        orgService.checkPass(orgId);
+        return Result.success("审核通过机构申请成功",true);
+    }
+
+    @PutMapping("/admin/checkRefuse/org/{orgId}")
+    public Result checkRefuseOrg(HttpServletRequest request,@PathVariable("orgId") Integer orgId) {
+        orgService.checkRefuse(orgId);
+        return Result.success("审核拒绝机构申请成功",true);
     }
 
 }
