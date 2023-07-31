@@ -13,6 +13,8 @@ public class StationMessageVO {
 
     private Long createTime;
 
+    private Integer status;
+
     public String getTitle() {
         return title;
     }
@@ -35,5 +37,13 @@ public class StationMessageVO {
 
     public void setCreateTime(Long createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

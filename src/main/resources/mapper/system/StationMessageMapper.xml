@@ -16,6 +16,7 @@
         <result column="title" property="title" />
         <result column="content" property="content" />
         <result column="createTime" property="createTime" />
+        <result column="status" property="status" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -23,12 +24,12 @@
         id, user_id, content, create_time, status
     </sql>
 
-    <select id="selectNoReadMessage" parameterType="java.lang.Integer" resultMap="stationMessageVOMap" >
-        select title, content, UNIX_TIMESTAMP(create_time)*1000 createTime from station_message where status = 0 and user_id = #{usedId};
+    <select id="selectMessage" parameterType="java.lang.Integer" resultMap="stationMessageVOMap" >
+        select title, content, UNIX_TIMESTAMP(create_time)*1000 createTime, status from station_message where user_id = #{usedId} order by createTime desc
     </select>
 
     <update id="updateStationMessageRead" parameterType="java.lang.Integer">
-        update station_message set status = 1 where user_id = #{userId}
+        update station_message set status = 1 where user_id = #{userId} and status = 0
     </update>
 
 </mapper>

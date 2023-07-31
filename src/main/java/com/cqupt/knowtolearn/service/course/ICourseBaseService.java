@@ -2,6 +2,7 @@ package com.cqupt.knowtolearn.service.course;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqupt.knowtolearn.common.Constants;
+import com.cqupt.knowtolearn.model.dto.req.CourseReq;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
@@ -20,4 +21,7 @@ public interface ICourseBaseService extends IService<CourseBase> {
     boolean alterStatus(Integer courseId, Enum<Constants.CourseState> beforeState, Enum<Constants.CourseState> afterState);
 
     CourseBase selectOneById(Integer courseId);
+
+    CourseBase addCourse(Integer userId, CourseReq req);
+
 }

@@ -2,6 +2,7 @@ package com.cqupt.knowtolearn.config;
 
 import com.cqupt.knowtolearn.interceptor.AdminInterceptor;
 import com.cqupt.knowtolearn.interceptor.LoginInterceptor;
+import com.cqupt.knowtolearn.interceptor.OrgInterceptor;
 import com.cqupt.knowtolearn.interceptor.RefreshTokenInterceptor;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
 import com.cqupt.knowtolearn.utils.JwtUtil;
@@ -48,5 +49,6 @@ public class WebConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**").order(0);
 
         registry.addInterceptor(new AdminInterceptor(jwtUtil)).addPathPatterns("/admin/**").order(2);
+        registry.addInterceptor(new OrgInterceptor(jwtUtil)).addPathPatterns("/org/**").order(2);
     }
 }

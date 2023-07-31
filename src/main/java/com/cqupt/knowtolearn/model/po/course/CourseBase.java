@@ -26,12 +26,7 @@ public class CourseBase implements Serializable {
     /**
      * 机构ID
      */
-    private Long companyId;
-
-    /**
-     * 机构名称
-     */
-    private String companyName;
+    private Integer orgId;
 
     /**
      * 课程名称
@@ -49,24 +44,9 @@ public class CourseBase implements Serializable {
     private String tags;
 
     /**
-     * 大分类
+     * 分类
      */
-    private String mt;
-
-    /**
-     * 小分类
-     */
-    private String st;
-
-    /**
-     * 课程等级
-     */
-    private String grade;
-
-    /**
-     * 教育模式(common普通，record 录播，live直播等)
-     */
-    private String teachMode;
+    private String category;
 
     /**
      * 课程介绍
@@ -91,23 +71,13 @@ public class CourseBase implements Serializable {
     private LocalDateTime changeDate;
 
     /**
-     * 创建人
+     * 发布时间
      */
-    private String createPeople;
-
-    /**
-     * 更新人
-     */
-    private String changePeople;
+    private LocalDateTime publishDate;
 
     /**
      * 课程状态
      */
     private Integer status;
-
-    /**
-     * 发布时间
-     */
-    private LocalDateTime publishDate;
 
 }

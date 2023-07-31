@@ -19,7 +19,7 @@ import java.util.Map;
  * @description
  */
 @RestController
-@RequestMapping("/org")
+@RequestMapping()
 public class OrgController {
 
     @Resource
@@ -28,16 +28,18 @@ public class OrgController {
     @Resource
     private CosService cosService;
 
-    @PostMapping("/apply")
+    @PostMapping("/user/org/apply")
     public Result applyOrg(HttpServletRequest request, @RequestBody OrgReq req) {
         boolean isSuccess = orgService.apply(UserHolder.getUser(), req);
         return isSuccess ? Result.success("申请机构成功,请等待管理员审核",true) : Result.fail("申请机构失败");
     }
 
-    @PostMapping("/submit/materials")
+    @PostMapping("/user/org/submit/materials")
     public Result getHomeCourse(HttpServletRequest request, @RequestBody Map<String,String> req) {
         String suffix = req.get("suffix");
         CosRes materialSignature = cosService.getOrgMaterialSignature(HttpMethodName.PUT, suffix);
         return Result.success("获取COS签名URL成功",materialSignature);
     }
+
+
 }

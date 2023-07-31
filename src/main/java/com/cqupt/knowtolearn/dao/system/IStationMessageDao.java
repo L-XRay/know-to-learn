@@ -16,7 +16,7 @@ import java.util.List;
 @Mapper
 public interface IStationMessageDao extends BaseMapper<StationMessage> {
 
-    List<StationMessageVO> selectNoReadMessage(Integer userId);
+    List<StationMessageVO> selectMessage(Integer userId);
 
     void updateStationMessageRead(Integer userId);
 }

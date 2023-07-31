@@ -113,8 +113,14 @@ public class UserController {
 
     @GetMapping("/stationMessage/all")
     public Result getStationMessage(HttpServletRequest request) {
-        List<StationMessageVO> data = stationMessageService.listNoReadMessage(UserHolder.getUser());
+        List<StationMessageVO> data = stationMessageService.listMessage(UserHolder.getUser());
         return Result.success("获取站内信成功",data);
+    }
+
+    @GetMapping("/stationMessage/count")
+    public Result getStationMessageCount(HttpServletRequest request) {
+        Long data = stationMessageService.getNoReadCount(UserHolder.getUser());
+        return Result.success("获取未读站内信成功",data);
     }
 
 }

@@ -5,21 +5,15 @@
     <!-- 通用查询映射结果 -->
     <resultMap id="BaseResultMap" type="com.cqupt.knowtolearn.model.po.course.CourseBase">
         <id column="id" property="id" />
-        <result column="company_id" property="companyId" />
-        <result column="company_name" property="companyName" />
+        <result column="org_id" property="orgId" />
         <result column="name" property="name" />
         <result column="teachers" property="teachers" />
         <result column="tags" property="tags" />
-        <result column="mt" property="mt" />
-        <result column="st" property="st" />
-        <result column="grade" property="grade" />
-        <result column="teach_mode" property="teachMode" />
+        <result column="category" property="category" />
         <result column="description" property="description" />
         <result column="pic" property="pic" />
         <result column="create_date" property="createDate" />
         <result column="change_date" property="changeDate" />
-        <result column="create_people" property="createPeople" />
-        <result column="change_people" property="changePeople" />
         <result column="status" property="status" />
         <result column="publish_date" property="publishDate"/>
     </resultMap>
@@ -44,7 +38,7 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, company_id, company_name, name, teachers, tags, mt, st, grade, teach_mode, description, pic, create_date, change_date, create_people, change_people, audit_status, status, publish_date
+        id, org_id, name, teachers, tags, category, description, pic, create_date, change_date, publish_date, status
     </sql>
 
     <select id="randCourse" resultMap="homeCourseMap">

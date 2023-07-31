@@ -14,5 +14,7 @@ import java.util.List;
  */
 public interface IStationMessageService extends IService<StationMessage> {
 
-    List<StationMessageVO> listNoReadMessage(Integer userId);
+    List<StationMessageVO> listMessage(Integer userId);
+
+    Long getNoReadCount(Integer userId);
 }

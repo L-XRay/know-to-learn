@@ -1,8 +1,11 @@
 package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Result;
+import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
 import com.cqupt.knowtolearn.exception.KnowException;
+import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
+import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +29,9 @@ public class SystemController {
 
     @Resource
     private IOrgService orgService;
+
+    @Resource
+    private ICourseBaseService courseBaseService;
 
     private static final Map<String, String> nameMap = new HashMap<>();
     static {
@@ -90,6 +96,12 @@ public class SystemController {
             return Result.success(200,"不存在未处理的机构申请");
         }
         return Result.success("获取未处理的机构申请成功",pendingOrgList);
+    }
+
+    @GetMapping("/admin/list/course")
+    public Result getCourseList(HttpServletRequest request) {
+        List<CourseBase> list = courseBaseService.list();
+        return Result.success("获取所有课程信息成功",list);
     }
 
     @PutMapping("/admin/checkPass/org/{orgId}")

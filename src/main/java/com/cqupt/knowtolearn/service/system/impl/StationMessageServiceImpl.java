@@ -30,9 +30,14 @@ public class StationMessageServiceImpl extends ServiceImpl<IStationMessageDao, S
 
     @Override
     @Transactional
-    public List<StationMessageVO> listNoReadMessage(Integer userId) {
-        List<StationMessageVO> data = stationMessageDao.selectNoReadMessage(userId);
+    public List<StationMessageVO> listMessage(Integer userId) {
+        List<StationMessageVO> data = stationMessageDao.selectMessage(userId);
         stationMessageDao.updateStationMessageRead(userId);
         return data;
+    }
+
+    @Override
+    public Long getNoReadCount(Integer userId) {
+        return stationMessageDao.selectCount(new LambdaQueryWrapper<StationMessage>().eq(StationMessage::getStatus, 0).eq(StationMessage::getUserId,userId));
     }
 }

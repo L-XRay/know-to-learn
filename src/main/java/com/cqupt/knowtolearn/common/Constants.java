@@ -121,7 +121,7 @@ public class Constants {
     }
 
     /**
-     * 机构状态：0未读、1已读
+     * 站内信状态：0未读、1已读
      */
     public enum StationMessageState {
 
