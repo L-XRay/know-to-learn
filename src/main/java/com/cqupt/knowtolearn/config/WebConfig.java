@@ -1,5 +1,6 @@
 package com.cqupt.knowtolearn.config;
 
+import com.cqupt.knowtolearn.interceptor.AdminInterceptor;
 import com.cqupt.knowtolearn.interceptor.LoginInterceptor;
 import com.cqupt.knowtolearn.interceptor.RefreshTokenInterceptor;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
@@ -45,5 +46,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "/course/recommendation").order(1);
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate,jwtUtil))
                 .addPathPatterns("/**").order(0);
+
+        registry.addInterceptor(new AdminInterceptor(jwtUtil)).addPathPatterns("/admin/**").order(2);
     }
 }

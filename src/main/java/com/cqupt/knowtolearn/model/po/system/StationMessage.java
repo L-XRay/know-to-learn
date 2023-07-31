@@ -23,6 +23,8 @@ public class StationMessage {
 
     private Integer userId;
 
+    private String title;
+
     private String content;
 
     private LocalDateTime createTime;

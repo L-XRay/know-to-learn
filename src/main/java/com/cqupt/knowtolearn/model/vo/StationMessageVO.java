@@ -7,9 +7,19 @@ package com.cqupt.knowtolearn.model.vo;
  */
 public class StationMessageVO {
 
+    private String title;
+
     private String content;
 
     private Long createTime;
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getContent() {
         return content;
