@@ -5,10 +5,10 @@ package com.cqupt.knowtolearn.model.dto;
  * @date 2023/7/29 15:40
  * @description
  */
-public class AlterStateDTO {
+public class AlterMediaStateDTO {
 
-    /** 活动ID */
-    private Integer courseId;
+    /** 媒资ID */
+    private Integer mediaId;
 
     /** 更新前状态 */
     private Integer beforeState;
@@ -16,21 +16,21 @@ public class AlterStateDTO {
     /** 更新后状态 */
     private Integer afterState;
 
-    public AlterStateDTO() {
+    public AlterMediaStateDTO() {
     }
 
-    public AlterStateDTO(Integer courseId, Integer beforeState, Integer afterState) {
-        this.courseId = courseId;
+    public AlterMediaStateDTO(Integer mediaId, Integer beforeState, Integer afterState) {
+        this.mediaId = mediaId;
         this.beforeState = beforeState;
         this.afterState = afterState;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public Integer getMediaId() {
+        return mediaId;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setMediaId(Integer mediaId) {
+        this.mediaId = mediaId;
     }
 
     public Integer getBeforeState() {

@@ -20,4 +20,10 @@
         id, chapter_name, course_id, parent_id, order_by, media, status,  create_date, change_date
     </sql>
 
+    <update id="alterState" parameterType="com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO">
+        UPDATE course_details
+        SET status = #{afterState}
+        WHERE id = #{mediaId} AND status = #{beforeState}
+    </update>
+
 </mapper>

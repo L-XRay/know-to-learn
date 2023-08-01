@@ -154,4 +154,46 @@ public class Constants {
             this.info = info;
         }
     }
+
+    /**
+     * 媒资状态：1待提审、2审核中、3已通过、4已拒绝、5已发布
+     */
+    public enum MediaState {
+
+        /** 1：待提审 */
+        EDIT(1, "待提审"),
+        /** 2：审核中 */
+        ARRAIGNMENT(2, "审核中"),
+        /** 3：已通过 */
+        PASS(3, "已通过"),
+        /** 4：已拒绝 */
+        REFUSE(4, "已拒绝"),
+        /** 5：已发布 */
+        PUBLISH(5, "已发布");
+
+        private Integer code;
+        private String info;
+
+        MediaState(Integer code, String info) {
+            this.code = code;
+            this.info = info;
+        }
+
+        public Integer getCode() {
+            return code;
+        }
+
+        public void setCode(Integer code) {
+            this.code = code;
+        }
+
+        public String getInfo() {
+            return info;
+        }
+
+        public void setInfo(String info) {
+            this.info = info;
+        }
+    }
+
 }

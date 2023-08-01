@@ -46,7 +46,7 @@
         SELECT cb.id courseId, cb.name courseName,cb.pic coverUrl,UNIX_TIMESTAMP(cb.publish_date) * 1000 publishTime,c.name orgName,c.id orgId FROM course_base cb inner join org c on cb.org_id = c.id where cb.status=6 ORDER BY RAND() LIMIT 8
     </select>
 
-    <update id="alterState" parameterType="com.cqupt.knowtolearn.model.dto.AlterStateDTO">
+    <update id="alterState" parameterType="com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO">
         UPDATE course_base
         SET status = #{afterState}
         WHERE id = #{courseId} AND status = #{beforeState}

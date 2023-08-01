@@ -2,7 +2,6 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.common.Result;
-import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.model.dto.req.AlterStateReq;
 import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.CourseReq;
@@ -11,8 +10,8 @@ import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
+import com.cqupt.knowtolearn.service.chapter.stateflow.IMediaStateHandler;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
-import com.cqupt.knowtolearn.service.course.stateflow.IStateHandler;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import com.qcloud.cos.http.HttpMethodName;
@@ -35,8 +34,11 @@ public class CourseController {
     @Resource
     private ICourseBaseService courseBaseService;
 
+//    @Resource
+//    private IStateHandler stateHandler;
+
     @Resource
-    private IStateHandler stateHandler;
+    private IMediaStateHandler mediaStateHandler;
 
     @Resource
     private CosService cosService;
@@ -52,46 +54,46 @@ public class CourseController {
         }
         return Result.success("获取首页课程成功",homeCourse);
     }
-
-    @PostMapping("/org/course/audit/arraignment")
-    public Result arraignment(HttpServletRequest request, @RequestBody AlterStateReq req) {
-        Integer courseId = req.getCourseId();
-        Integer currentState = req.getCurrentState();
-        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
-        return stateHandler.arraignment(courseId,currentStateEum);
-    }
-
-    @PostMapping("/admin/course/audit/checkPass")
-    public Result checkPass(HttpServletRequest request, @RequestBody AlterStateReq req) {
-        Integer courseId = req.getCourseId();
-        Integer currentState = req.getCurrentState();
-        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
-        return stateHandler.checkPass(courseId,currentStateEum);
-    }
-
-    @PostMapping("/admin/course/audit/checkRefuse")
-    public Result checkRefuse(HttpServletRequest request, @RequestBody AlterStateReq req) {
-        Integer courseId = req.getCourseId();
-        Integer currentState = req.getCurrentState();
-        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
-        return stateHandler.checkRefuse(courseId,currentStateEum);
-    }
-
-    @PostMapping("/org/course/audit/checkRevoke")
-    public Result checkRevoke(HttpServletRequest request, @RequestBody AlterStateReq req) {
-        Integer courseId = req.getCourseId();
-        Integer currentState = req.getCurrentState();
-        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
-        return stateHandler.checkRevoke(courseId, currentStateEum);
-    }
-
-    @PostMapping("/org/course/audit/publish")
-    public Result publish(HttpServletRequest request, @RequestBody AlterStateReq req) {
-        Integer courseId = req.getCourseId();
-        Integer currentState = req.getCurrentState();
-        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
-        return stateHandler.publish(courseId, currentStateEum);
-    }
+//
+//    @PostMapping("/org/course/audit/arraignment")
+//    public Result arraignment(HttpServletRequest request, @RequestBody AlterStateReq req) {
+//        Integer courseId = req.getCourseId();
+//        Integer currentState = req.getCurrentState();
+//        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
+//        return stateHandler.arraignment(courseId,currentStateEum);
+//    }
+//
+//    @PostMapping("/admin/course/audit/checkPass")
+//    public Result checkPass(HttpServletRequest request, @RequestBody AlterStateReq req) {
+//        Integer courseId = req.getCourseId();
+//        Integer currentState = req.getCurrentState();
+//        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
+//        return stateHandler.checkPass(courseId,currentStateEum);
+//    }
+//
+//    @PostMapping("/admin/course/audit/checkRefuse")
+//    public Result checkRefuse(HttpServletRequest request, @RequestBody AlterStateReq req) {
+//        Integer courseId = req.getCourseId();
+//        Integer currentState = req.getCurrentState();
+//        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
+//        return stateHandler.checkRefuse(courseId,currentStateEum);
+//    }
+//
+//    @PostMapping("/org/course/audit/checkRevoke")
+//    public Result checkRevoke(HttpServletRequest request, @RequestBody AlterStateReq req) {
+//        Integer courseId = req.getCourseId();
+//        Integer currentState = req.getCurrentState();
+//        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
+//        return stateHandler.checkRevoke(courseId, currentStateEum);
+//    }
+//
+//    @PostMapping("/org/course/audit/publish")
+//    public Result publish(HttpServletRequest request, @RequestBody AlterStateReq req) {
+//        Integer courseId = req.getCourseId();
+//        Integer currentState = req.getCurrentState();
+//        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
+//        return stateHandler.publish(courseId, currentStateEum);
+//    }
 
     @PostMapping("/org/course/create")
     public Result create(HttpServletRequest request, @RequestBody CourseReq req) {
@@ -130,9 +132,59 @@ public class CourseController {
         return Result.success("获取章节视频成功",data);
     }
 
+    @PostMapping("/org/course/chapter/media/audit/arraignment")
+    public Result arraignmentMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.arraignment(mediaId,currentStateEum);
+    }
+
+    @PostMapping("/org/course/chapter/media/audit/checkPass")
+    public Result checkPassMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.checkPass(mediaId,currentStateEum);
+    }
+
+    @PostMapping("/org/course/chapter/media/audit/checkRefuse")
+    public Result checkRefuseMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.checkRefuse(mediaId,currentStateEum);
+    }
+
+    @PostMapping("/org/course/chapter/media/audit/publish")
+    public Result publishMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.publish(mediaId,currentStateEum);
+    }
+
+    @PostMapping("/org/course/chapter/media/audit/edit")
+    public Result editMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.editing(mediaId,currentStateEum);
+    }
+
     private Constants.CourseState getCurrentStateEnum(Integer beforeState) {
         Constants.CourseState currentState = null;
         for (Constants.CourseState state : Constants.CourseState.values()) {
+            if (beforeState.equals(state.getCode())) {
+                currentState = state;
+            }
+        }
+        return currentState;
+    }
+
+    private Constants.MediaState getCurrentStateEnumM(Integer beforeState) {
+        Constants.MediaState currentState = null;
+        for (Constants.MediaState state : Constants.MediaState.values()) {
             if (beforeState.equals(state.getCode())) {
                 currentState = state;
             }

@@ -1,6 +1,7 @@
 package com.cqupt.knowtolearn.service.chapter;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
@@ -23,4 +24,6 @@ public interface ICourseDetailsService extends IService<CourseDetails> {
     URL addChapterMedia(MediaReq req);
 
     List<Map<String,Object>> getMedia(Integer chapterId);
+
+    boolean alterStatus(Integer mediaId, Enum<Constants.MediaState> beforeState, Enum<Constants.MediaState> afterState);
 }

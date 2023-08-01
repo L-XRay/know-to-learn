@@ -1,7 +1,7 @@
 package com.cqupt.knowtolearn.dao.course;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.cqupt.knowtolearn.model.dto.AlterStateDTO;
+import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,11 +19,11 @@ public interface ICourseBaseDao extends BaseMapper<CourseBase> {
     List<HomeCourseVO> randCourse();
 
     /**
-     * 变更活动状态
+     * 变更课程状态
      *
      * @param alterStateVo  [courseId、beforeState、afterState]
      * @return 更新数量
      */
-    int alterState(AlterStateDTO alterStateVo);
+    int alterState(AlterCourseStateDTO alterStateVo);
 
 }

@@ -2,7 +2,10 @@ package com.cqupt.knowtolearn.service.chapter.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
+import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
+import com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO;
 import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
@@ -43,7 +46,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         courseDetails.setChapterName(req.getChapterName());
         courseDetails.setMedia(null);
         courseDetails.setCreateDate(LocalDateTime.now());
-        courseDetails.setStatus(6);
+        courseDetails.setStatus(5);
         courseDetails.setOrderBy(req.getOrderBy());
         courseDetails.setParentId(0);
         int insert = courseDetailsDao.insert(courseDetails);
@@ -76,7 +79,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         courseDetails.setCourseId(req.getCourseId());
         courseDetails.setMedia(signature.getResourceURL());
         courseDetails.setChapterName(req.getName());
-        courseDetails.setStatus(0);
+        courseDetails.setStatus(1);
         courseDetails.setCreateDate(LocalDateTime.now());
         courseDetails.setOrderBy(req.getOrderBy());
         int insert = courseDetailsDao.insert(courseDetails);
@@ -101,5 +104,12 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
             list.add(map);
         }
         return list;
+    }
+
+    @Override
+    public boolean alterStatus(Integer mediaId, Enum<Constants.MediaState> beforeState, Enum<Constants.MediaState> afterState) {
+        AlterMediaStateDTO req = new AlterMediaStateDTO(mediaId,((Constants.MediaState)beforeState).getCode(),((Constants.MediaState)afterState).getCode());
+        int count = courseDetailsDao.alterState(req);
+        return 1 == count;
     }
 }

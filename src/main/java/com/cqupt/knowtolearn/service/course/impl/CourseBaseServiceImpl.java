@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
-import com.cqupt.knowtolearn.model.dto.AlterStateDTO;
+import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.req.CourseReq;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.po.user.User;
@@ -39,7 +39,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
 
     @Override
     public boolean alterStatus(Integer courseId, Enum<Constants.CourseState> beforeState, Enum<Constants.CourseState> afterState) {
-        AlterStateDTO req = new AlterStateDTO(courseId,((Constants.CourseState)beforeState).getCode(),((Constants.CourseState)afterState).getCode());
+        AlterCourseStateDTO req = new AlterCourseStateDTO(courseId,((Constants.CourseState)beforeState).getCode(),((Constants.CourseState)afterState).getCode());
         int count = courseBaseDao.alterState(req);
         return 1 == count;
     }
