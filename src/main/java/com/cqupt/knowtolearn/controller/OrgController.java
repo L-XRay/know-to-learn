@@ -48,4 +48,18 @@ public class OrgController {
         return Result.success("获取机构信息成功",map);
     }
 
+    @PostMapping("/org/info/update/orgName")
+    public Result updateOrgName(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String orgName = req.get("orgName");
+        orgService.updateOrgName(UserHolder.getUser(),orgName);
+        return Result.success(200,"修改机构名称成功");
+    }
+
+    @PostMapping("/org/info/update/orgIntro")
+    public Result updateOrgIntro(HttpServletRequest request,@RequestBody Map<String,String> req) {
+        String introduction = req.get("orgIntro");
+        orgService.updateOrgIntro(UserHolder.getUser(), introduction);
+        return Result.success(200,"修改机构介绍成功");
+    }
+
 }

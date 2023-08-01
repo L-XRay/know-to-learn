@@ -25,4 +25,8 @@ public interface IOrgService extends IService<Org> {
     void checkRefuse(Integer orgId);
 
     Map<String,Object> findOwnOrg(Integer userId);
+
+    void updateOrgName(Integer userId, String orgName);
+
+    void updateOrgIntro(Integer userId, String introduction);
 }

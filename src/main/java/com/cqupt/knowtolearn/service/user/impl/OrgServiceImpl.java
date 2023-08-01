@@ -142,13 +142,38 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
 
     @Override
     public Map<String, Object> findOwnOrg(Integer userId) {
-        User user = userDao.selectById(userId);
-        Org org = orgDao.selectById(user.getOrgId());
+        Org org = getOrg(userId);
         Map<String,Object> map = new HashMap<>();
         map.put("id",org.getId());
         map.put("name",org.getName());
         map.put("introduction",org.getIntro());
         map.put("materials",org.getMaterials());
         return map;
+    }
+
+    @Override
+    public void updateOrgName(Integer userId, String orgName) {
+        Org org = getOrg(userId);
+        org.setName(orgName);
+        int update = orgDao.updateById(org);
+        if (update!=1) {
+            throw new RuntimeException("修改机构名称失败");
+        }
+    }
+
+    @Override
+    public void updateOrgIntro(Integer userId, String introduction) {
+        Org org = getOrg(userId);
+        org.setIntro(introduction);
+        int update = orgDao.updateById(org);
+        if (update!=1) {
+            throw new RuntimeException("修改机构介绍失败");
+        }
+    }
+
+    private Org getOrg(Integer userId) {
+        User user = userDao.selectById(userId);
+        Org org = orgDao.selectById(user.getOrgId());
+        return org;
     }
 }
