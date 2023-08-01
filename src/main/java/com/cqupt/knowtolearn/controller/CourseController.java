@@ -9,6 +9,7 @@ import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
+import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.chapter.stateflow.IMediaStateHandler;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
@@ -140,7 +141,7 @@ public class CourseController {
         return mediaStateHandler.arraignment(mediaId,currentStateEum);
     }
 
-    @PostMapping("/org/course/chapter/media/audit/checkPass")
+    @PostMapping("/admin/course/chapter/media/audit/checkPass")
     public Result checkPassMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
         Integer mediaId = req.get("mediaId");
         Integer currentState = req.get("currentState");
@@ -148,7 +149,7 @@ public class CourseController {
         return mediaStateHandler.checkPass(mediaId,currentStateEum);
     }
 
-    @PostMapping("/org/course/chapter/media/audit/checkRefuse")
+    @PostMapping("/admin/course/chapter/media/audit/checkRefuse")
     public Result checkRefuseMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
         Integer mediaId = req.get("mediaId");
         Integer currentState = req.get("currentState");
@@ -172,6 +173,18 @@ public class CourseController {
         return mediaStateHandler.editing(mediaId,currentStateEum);
     }
 
+    @GetMapping("/org/course/all")
+    public Result getOwnOrgCourse(HttpServletRequest request) {
+        List<OrgCourseVO> course = courseBaseService.getOrgCourse(UserHolder.getUser());
+        return Result.success("获取本机构课程成功",course);
+    }
+
+    @DeleteMapping("/org/course/{courseId}/delete")
+    public Result deleteCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
+        courseBaseService.deleteCourse(courseId);
+        return Result.success("删除课程成功",true);
+    }
+
     private Constants.CourseState getCurrentStateEnum(Integer beforeState) {
         Constants.CourseState currentState = null;
         for (Constants.CourseState state : Constants.CourseState.values()) {
@@ -181,6 +194,8 @@ public class CourseController {
         }
         return currentState;
     }
+
+
 
     private Constants.MediaState getCurrentStateEnumM(Integer beforeState) {
         Constants.MediaState currentState = null;

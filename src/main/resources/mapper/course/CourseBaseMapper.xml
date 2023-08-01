@@ -36,6 +36,13 @@
         <result column="orgName" property="orgName" />
     </resultMap>
 
+    <resultMap id="orgCourseMap" type="com.cqupt.knowtolearn.model.vo.OrgCourseVO">
+        <result column="courseId" property="courseId" />
+        <result column="courseName" property="courseName" />
+        <result column="coverUrl" property="coverUrl" />
+        <result column="publishTime" property="publishTime"/>
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, org_id, name, teachers, tags, category, description, pic, create_date, change_date, publish_date, status
@@ -51,4 +58,14 @@
         SET status = #{afterState}
         WHERE id = #{courseId} AND status = #{beforeState}
     </update>
+
+    <select id="selectOrgCourse" parameterType="java.lang.Integer" resultMap="orgCourseMap">
+        select c.id   courseId,
+               c.name courseName,
+               c.pic coverUrl,
+               UNIX_TIMESTAMP(c.publish_date) * 1000 publishTime
+        from course_base c
+                 inner join org o on c.org_id = o.id
+        where o.id = #{orgId}
+    </select>
 </mapper>

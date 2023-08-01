@@ -1,17 +1,23 @@
 package com.cqupt.knowtolearn.service.course.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqupt.knowtolearn.common.Constants;
+import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.req.CourseReq;
+import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
+import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
+import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.time.LocalDateTime;
@@ -31,6 +37,10 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
 
     @Resource
     private IUserDao userDao;
+
+    @Resource
+    private ICourseDetailsDao courseDetailsDao;
+
 
     @Override
     public List<HomeCourseVO> getHomeCourse() {
@@ -71,5 +81,25 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         }
 
         return courseBase;
+    }
+
+    @Override
+    public List<OrgCourseVO> getOrgCourse(Integer userId) {
+        User user = userDao.selectById(userId);
+        Integer orgId = user.getOrgId();
+        return courseBaseDao.selectOrgCourse(orgId);
+    }
+
+    @Override
+    @Transactional
+    public void deleteCourse(Integer courseId) {
+        boolean b = this.removeById(courseId);
+        if (!b) {
+            throw new RuntimeException("课程基本信息删除失败");
+        }
+        int delete = courseDetailsDao.delete(new LambdaQueryWrapper<CourseDetails>().eq(CourseDetails::getCourseId, courseId));
+        if (delete==0) {
+            throw new RuntimeException("课程详细信息删除失败");
+        }
     }
 }

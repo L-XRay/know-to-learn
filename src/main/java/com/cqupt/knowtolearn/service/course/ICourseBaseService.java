@@ -6,6 +6,7 @@ import com.cqupt.knowtolearn.model.dto.req.CourseReq;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
+import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface ICourseBaseService extends IService<CourseBase> {
 
     CourseBase addCourse(Integer userId, CourseReq req);
 
+    List<OrgCourseVO> getOrgCourse(Integer userId);
+
+    void deleteCourse(Integer courseId);
 }
