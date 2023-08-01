@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.cqupt.knowtolearn.model.po.chapter.CourseDetails">
+        <id column="id" property="id" />
+        <result column="chapter_name" property="chapterName" />
+        <result column="course_id" property="courseId" />
+        <result column="parent_id" property="parentId" />
+        <result column="order_by" property="orderBy" />
+        <result column="media" property="media" />
+        <result column="status" property="status" />
+        <result column="create_date" property="createDate" />
+        <result column="change_date" property="changeDate" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, chapter_name, course_id, parent_id, order_by, media, status,  create_date, change_date
+    </sql>
+
+</mapper>

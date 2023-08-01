@@ -2,11 +2,15 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.common.Result;
+import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.model.dto.req.AlterStateReq;
+import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.CourseReq;
+import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
+import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.course.stateflow.IStateHandler;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +40,9 @@ public class CourseController {
 
     @Resource
     private CosService cosService;
+
+    @Resource
+    private ICourseDetailsService courseDetailsService;
 
     @GetMapping("/course/recommendation")
     public Result getHomeCourse(HttpServletRequest request) {
@@ -96,6 +104,30 @@ public class CourseController {
         String suffix = req.get("suffix");
         CosRes materialSignature = cosService.getOrgMaterialSignature(HttpMethodName.PUT, suffix);
         return Result.success("获取COS签名URL成功",materialSignature);
+    }
+
+    @PostMapping("/org/course/create/chapter")
+    public Result createChapter(HttpServletRequest request, @RequestBody ChapterReq req) {
+        courseDetailsService.addCourseChapter(req);
+        return Result.success("创建课程章节成功",true);
+    }
+
+    @GetMapping("/org/course/{courseId}/chapter")
+    public Result getChapter(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
+        List<Map<String, Object>> data = courseDetailsService.getChapter(courseId);
+        return Result.success("获取课程章节成功",data);
+    }
+
+    @PostMapping("/org/course/create/chapter/media")
+    public Result createChapterMedia(HttpServletRequest request, @RequestBody MediaReq req) {
+        URL url = courseDetailsService.addChapterMedia(req);
+        return Result.success("创建章节视频信息成功",url);
+    }
+
+    @GetMapping("/org/course/chapter/{chapterId}/media")
+    public Result getMedia(HttpServletRequest request, @PathVariable("chapterId") Integer chapterId) {
+        List<Map<String, Object>> data = courseDetailsService.getMedia(chapterId);
+        return Result.success("获取章节视频成功",data);
     }
 
     private Constants.CourseState getCurrentStateEnum(Integer beforeState) {
