@@ -68,6 +68,7 @@ public abstract class AbstractAuthBase implements IAuthService {
         registerUser.setUsername(email);
         registerUser.setNickname(email);
         registerUser.setStatus(1);
+        registerUser.setOrgId(0);
         registerUser.setCreateTime(LocalDateTime.now());
         int insert = userDao.insert(registerUser);
         if(insert<=0) {

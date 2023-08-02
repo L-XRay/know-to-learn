@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.dao.course;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
+import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 import org.apache.ibatis.annotations.Mapper;
@@ -29,4 +30,7 @@ public interface ICourseBaseDao extends BaseMapper<CourseBase> {
 
     List<OrgCourseVO> selectOrgCourse(Integer orgId);
 
+    CourseVO selectCourseVoById(Integer orgId, Integer courseId);
+
+    Integer selectCourseIsOwn(Integer orgId, Integer courseId);
 }

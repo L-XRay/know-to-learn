@@ -18,15 +18,6 @@
         <result column="publish_date" property="publishDate"/>
     </resultMap>
 
-    <resultMap id="simpleCourseMap" type="com.cqupt.knowtolearn.model.vo.CourseVO">
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="teachers" property="teachers" />
-        <result column="pic" property="pic" />
-        <result column="publish_date" property="publishDate"/>
-        <result column="org" property="org" />
-    </resultMap>
-
     <resultMap id="homeCourseMap" type="com.cqupt.knowtolearn.model.vo.HomeCourseVO">
         <result column="courseId" property="courseId" />
         <result column="courseName" property="courseName" />
@@ -41,6 +32,18 @@
         <result column="courseName" property="courseName" />
         <result column="coverUrl" property="coverUrl" />
         <result column="publishTime" property="publishTime"/>
+    </resultMap>
+
+    <resultMap id="courseVoMap" type="com.cqupt.knowtolearn.model.vo.CourseVO">
+        <result column="name" property="name" />
+        <result column="introduction" property="introduction" />
+        <result column="teachers" property="teachers" />
+        <result column="tags" property="tags" />
+        <result column="category" property="category" />
+        <result column="pic" property="pic" />
+        <result column="orgName" property="orgName" />
+        <result column="avatar" property="avatar" />
+        <result column="isAuthor" property="isAuthor" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -67,5 +70,29 @@
         from course_base c
                  inner join org o on c.org_id = o.id
         where o.id = #{orgId}
+    </select>
+
+    <select id="selectCourseVoById" parameterType="java.lang.Integer" resultMap="courseVoMap">
+        select c.name name,
+               c.description introduction,
+               c.category,
+               c.pic,
+               c.tags,
+               c.teachers,
+               o.name orgName,
+               u.avatar,
+               u.org_id = #{orgId} isAuthor
+        from course_base c
+                 inner join org o on o.id = c.org_id
+                 inner join user u on o.id = u.org_id
+        where c.id = #{courseId}
+    </select>
+
+    <select id="selectCourseIsOwn" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select u.org_id = #{orgId}
+        from course_base c
+                 inner join org o on o.id = c.org_id
+                 inner join user u on o.id = u.org_id
+        where c.id = #{courseId}
     </select>
 </mapper>

@@ -11,6 +11,7 @@ import com.cqupt.knowtolearn.model.dto.req.CourseReq;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.po.user.User;
+import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
@@ -101,5 +102,12 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         if (delete==0) {
             throw new RuntimeException("课程详细信息删除失败");
         }
+    }
+
+    @Override
+    public CourseVO selectCourseVoById(Integer userId, Integer courseId) {
+        User user = userDao.selectById(userId);
+        Integer orgId = user.getOrgId();
+        return courseBaseDao.selectCourseVoById(orgId, courseId);
     }
 }

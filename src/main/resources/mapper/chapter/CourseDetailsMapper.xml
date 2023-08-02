@@ -15,6 +15,14 @@
         <result column="change_date" property="changeDate" />
     </resultMap>
 
+    <resultMap id="courseDetailDTOMap" type="com.cqupt.knowtolearn.model.dto.CourseDetailDTO">
+        <id column="id" property="id" />
+        <result column="parent_id" property="pid" />
+        <result column="chapter_name" property="name" />
+        <result column="order_by" property="orderBy" />
+        <result column="status" property="status" />
+    </resultMap>
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, chapter_name, course_id, parent_id, order_by, media, status,  create_date, change_date
@@ -26,4 +34,7 @@
         WHERE id = #{mediaId} AND status = #{beforeState}
     </update>
 
+    <select id="selectTreeNodes" parameterType="java.lang.Integer" resultMap="courseDetailDTOMap">
+        select id,chapter_name,parent_id,order_by,status from course_details where course_id = #{courseId}
+    </select>
 </mapper>

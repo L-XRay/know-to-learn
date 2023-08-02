@@ -2,16 +2,16 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.common.Result;
-import com.cqupt.knowtolearn.model.dto.req.AlterStateReq;
-import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
-import com.cqupt.knowtolearn.model.dto.req.CourseReq;
-import com.cqupt.knowtolearn.model.dto.req.MediaReq;
+import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
+import com.cqupt.knowtolearn.model.dto.req.*;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
+import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.chapter.stateflow.IMediaStateHandler;
+import com.cqupt.knowtolearn.service.comment.ICommentService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.utils.UserHolder;
@@ -46,6 +46,9 @@ public class CourseController {
 
     @Resource
     private ICourseDetailsService courseDetailsService;
+
+    @Resource
+    private ICommentService commentService;
 
     @GetMapping("/course/recommendation")
     public Result getHomeCourse(HttpServletRequest request) {
@@ -179,10 +182,44 @@ public class CourseController {
         return Result.success("获取本机构课程成功",course);
     }
 
+    @GetMapping("/user/course/{courseId}/get")
+    public Result getCourse(HttpServletRequest request, @PathVariable("courseId") Integer courseId) {
+        CourseVO courseVO = courseBaseService.selectCourseVoById(UserHolder.getUser(), courseId);
+        return Result.success("查询指定课程基本信息成功",courseVO);
+    }
+
+    @GetMapping("/user/course/{courseId}/details")
+    public Result getCourseDetails(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
+        Map<String,Object> data = courseDetailsService.getCourseDetail(UserHolder.getUser(), courseId);
+        return Result.success("查询课程详细信息成功",data);
+    }
+
+    // TODO 无法保证是自己机构才能删除
     @DeleteMapping("/org/course/{courseId}/delete")
     public Result deleteCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
         courseBaseService.deleteCourse(courseId);
         return Result.success("删除课程成功",true);
+    }
+
+    @DeleteMapping("/org/chapter/{chapterId}/delete")
+    public Result deleteChapter(HttpServletRequest request,@PathVariable("chapterId") Integer chapterId) {
+        courseDetailsService.deleteChapter(chapterId);
+        return Result.success("删除章节成功",true);
+    }
+
+    // TODO 无法保证是自己机构才能修改
+    @PostMapping("/org/chapter/update")
+    public Result updateChapter(HttpServletRequest request,@RequestBody Map<String,Object> req) {
+        Integer chapterId = (Integer) req.get("chapterId");
+        String chapterName = (String) req.get("chapterName");
+        courseDetailsService.updateChapter(chapterId,chapterName);
+        return Result.success("修改章节成功",true);
+    }
+
+    @PostMapping("/user/comment/add")
+    public Result deleteCourse(HttpServletRequest request, @RequestBody CommentReq req) {
+        commentService.addComment(UserHolder.getUser(),req);
+        return Result.success("评论成功",true);
     }
 
     private Constants.CourseState getCurrentStateEnum(Integer beforeState) {
@@ -194,7 +231,6 @@ public class CourseController {
         }
         return currentState;
     }
-
 
 
     private Constants.MediaState getCurrentStateEnumM(Integer beforeState) {

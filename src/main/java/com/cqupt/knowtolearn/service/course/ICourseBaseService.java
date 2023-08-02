@@ -28,4 +28,6 @@ public interface ICourseBaseService extends IService<CourseBase> {
     List<OrgCourseVO> getOrgCourse(Integer userId);
 
     void deleteCourse(Integer courseId);
+
+    CourseVO selectCourseVoById(Integer userId, Integer courseId);
 }

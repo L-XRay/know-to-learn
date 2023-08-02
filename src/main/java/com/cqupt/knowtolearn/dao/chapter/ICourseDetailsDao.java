@@ -3,8 +3,11 @@ package com.cqupt.knowtolearn.dao.chapter;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO;
+import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @author Ray
@@ -21,5 +24,7 @@ public interface ICourseDetailsDao extends BaseMapper<CourseDetails> {
      * @return 更新数量
      */
     int alterState(AlterMediaStateDTO alterStateVo);
+
+    List<CourseDetailDTO> selectTreeNodes(Integer courseId);
 
 }

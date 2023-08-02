@@ -14,12 +14,15 @@ import java.time.LocalDateTime;
  */
 public class CourseVO {
 
-    private Integer id;
-
     /**
      * 机构名称
      */
-    private String org;
+    private String orgName;
+
+    /**
+     * 机构头像
+     */
+    private String avatar;
 
     /**
      * 课程名称
@@ -36,25 +39,28 @@ public class CourseVO {
      */
     private String pic;
 
-    /**
-     * 发布时间
-     */
-    private LocalDateTime publishDate;
+    private String introduction;
 
-    public Integer getId() {
-        return id;
+    private String category;
+
+    private String tags;
+
+    private boolean isAuthor;
+
+    public String getOrgName() {
+        return orgName;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setOrgName(String orgName) {
+        this.orgName = orgName;
     }
 
-    public String getOrg() {
-        return org;
+    public String getAvatar() {
+        return avatar;
     }
 
-    public void setOrg(String org) {
-        this.org = org;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getName() {
@@ -81,11 +87,35 @@ public class CourseVO {
         this.pic = pic;
     }
 
-    public LocalDateTime getPublishDate() {
-        return publishDate;
+    public String getIntroduction() {
+        return introduction;
     }
 
-    public void setPublishDate(LocalDateTime publishDate) {
-        this.publishDate = publishDate;
+    public void setIntroduction(String introduction) {
+        this.introduction = introduction;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public boolean isAuthor() {
+        return isAuthor;
+    }
+
+    public void setAuthor(boolean author) {
+        isAuthor = author;
     }
 }
