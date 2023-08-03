@@ -15,6 +15,13 @@
         <result column="change_date" property="changeDate" />
     </resultMap>
 
+    <resultMap id="simpleCourseDetailDTOMap" type="com.cqupt.knowtolearn.model.dto.SimpleCourseDetailDTO">
+        <id column="id" property="id" />
+        <result column="parent_id" property="pid" />
+        <result column="chapter_name" property="name" />
+        <result column="media" property="url" />
+    </resultMap>
+
     <resultMap id="courseDetailDTOMap" type="com.cqupt.knowtolearn.model.dto.CourseDetailDTO">
         <id column="id" property="id" />
         <result column="parent_id" property="pid" />
@@ -65,5 +72,9 @@
                  inner join course_base cb on cd.course_id = cb.id
                  inner join org o on cb.org_id = o.id
         where cd.status = 2
+    </select>
+
+    <select id="selectSimpleTreeNodes" parameterType="java.lang.Integer" resultMap="simpleCourseDetailDTOMap">
+        select id,chapter_name,parent_id,media from course_details where course_id = #{courseId}
     </select>
 </mapper>

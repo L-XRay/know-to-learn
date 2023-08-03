@@ -5,14 +5,18 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
+import com.cqupt.knowtolearn.dao.user.IOrgDao;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO;
 import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
+import com.cqupt.knowtolearn.model.dto.SimpleCourseDetailDTO;
 import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
+import com.cqupt.knowtolearn.model.po.course.CourseBase;
+import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
@@ -20,10 +24,13 @@ import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.qcloud.cos.http.HttpMethodName;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.net.URL;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,6 +51,9 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
 
     @Resource
     private IUserDao userDao;
+
+    @Resource
+    private IOrgDao orgDao;
 
     @Resource
     private ICourseBaseDao courseBaseDao;
@@ -190,5 +200,64 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
     @Override
     public List<CourseDetailVO> getPendingMediaList() {
         return courseDetailsDao.selectPendingMediaList();
+    }
+
+    @Override
+    @Transactional
+    public Map<String, Object> getSimpleCourseDetail(Integer chapterId) {
+        CourseDetails courseDetails = null;
+        Org org = null;
+        User user = null;
+        List<SimpleCourseDetailDTO> list = null;
+        try {
+            courseDetails = courseDetailsDao.selectById(chapterId);
+            Integer courseId = courseDetails.getCourseId();
+            CourseBase courseBase = courseBaseDao.selectById(courseId);
+            org = orgDao.selectById(courseBase.getOrgId());
+            user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getOrgId, org.getId()));
+            list = courseDetailsDao.selectSimpleTreeNodes(courseId);
+        } catch (Exception e) {
+            throw new RuntimeException("数据库操作失败");
+        }
+        Map<Integer, SimpleCourseDetailDTO> map = list.stream().collect(Collectors.toMap(key -> key.getId(), value -> value));
+        List<SimpleCourseDetailDTO> data = new ArrayList<>();
+
+        list.forEach(item -> {
+
+            if (item.getPid().equals(0)) {
+                data.add(item);
+            }
+            // 放入父节点的 childrenTreeNodes
+
+            // 找到当前节点的父节点
+            // 第一层直接跳过,因为之前已经过滤了传入的根节点,得到的parent为null
+            // 二层及以上就可以在map中找到自己的父节点
+            SimpleCourseDetailDTO parent = map.get(item.getPid());
+
+            if (parent!=null) {
+                // 如果第一次遍历到,此时父节点的子节点为null,进行初始化
+                if (parent.getVideos()==null) {
+                    parent.setVideos(new ArrayList<>());
+                }
+
+                // 放入父节点的 childrenTreeNodes
+                parent.getVideos().add(item);
+            }
+        });
+
+        ZoneId beijingZoneId = ZoneId.of("Asia/Shanghai");
+        ZonedDateTime zonedDateTime = courseDetails.getCreateDate().atZone(beijingZoneId);
+        long publishTime = zonedDateTime.toInstant().toEpochMilli();
+        Map<String,Object> res = new HashMap<>();
+        res.put("name",courseDetails.getChapterName());
+        res.put("publishTime",publishTime);
+        res.put("url",courseDetails.getMedia());
+        res.put("avatar",user.getAvatar());
+        res.put("orgName",org.getName());
+        res.put("orgId",org.getId());
+        res.put("userId",user.getId());
+        res.put("id",courseDetails.getId());
+        res.put("chapters",data);
+        return res;
     }
 }

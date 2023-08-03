@@ -36,4 +36,6 @@ public interface ICourseDetailsService extends IService<CourseDetails> {
     Map<String,Object> getCourseDetail(Integer userId, Integer courseId);
 
     List<CourseDetailVO> getPendingMediaList();
+
+    Map<String,Object> getSimpleCourseDetail(Integer chapterId);
 }

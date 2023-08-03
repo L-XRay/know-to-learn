@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO;
 import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
+import com.cqupt.knowtolearn.model.dto.SimpleCourseDetailDTO;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
@@ -30,5 +31,7 @@ public interface ICourseDetailsDao extends BaseMapper<CourseDetails> {
     List<CourseDetailDTO> selectTreeNodes(Integer courseId);
 
     List<CourseDetailVO> selectPendingMediaList();
+
+    List<SimpleCourseDetailDTO> selectSimpleTreeNodes(Integer courseId);
 
 }

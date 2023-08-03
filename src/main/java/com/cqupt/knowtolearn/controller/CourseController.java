@@ -219,6 +219,12 @@ public class CourseController {
         return Result.success("查询课程详细信息成功",data);
     }
 
+    @GetMapping("/user/course/chapter/{chapterId}/details")
+    public Result getChapterDetails(HttpServletRequest request,@PathVariable("chapterId") Integer chapterId) {
+        Map<String, Object> data = courseDetailsService.getSimpleCourseDetail(chapterId);
+        return Result.success("查询视频页信息成功",data);
+    }
+
     // TODO 无法保证是自己机构才能删除
     @DeleteMapping("/org/course/{courseId}/delete")
     public Result deleteCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {

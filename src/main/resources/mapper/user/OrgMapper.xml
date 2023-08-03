@@ -26,7 +26,9 @@
     <resultMap id="orgHomeMap" type="com.cqupt.knowtolearn.model.vo.OrgHomeVO">
         <result column="orgId" property="orgId" />
         <result column="userId" property="userId" />
+        <result column="avatar" property="avatar" />
         <result column="orgName" property="orgName" />
+        <result column="materials" property="materials" />
         <result column="introduction" property="introduction" />
         <collection property="courses" ofType="com.cqupt.knowtolearn.model.dto.OrgCourseDTO">
             <result column="courseId" property="courseId" />
@@ -53,6 +55,7 @@
     <select id="selectOrgCourse" parameterType="java.lang.Integer" resultMap="orgHomeMap">
         select u.org_id                               orgId,
                u.id                                   userId,
+               u.avatar                               avatar,
                o.name                                 orgName,
                o.intro                                introduction,
                o.materials                            materials,
@@ -64,10 +67,10 @@
                cb.tags                                tags,
                cb.teachers                            teachers,
                UNIX_TIMESTAMP(cb.publish_date) * 1000 publishTime
-        from user u
-                 join org o on o.id = u.org_id
-                 inner join course_base cb on o.id = cb.org_id
-        where u.org_id = #{orgId}
+        from org o
+                 left join user u on o.id = u.org_id
+                 left join course_base cb on o.id = cb.org_id
+        where o.id = #{orgId} order by cb.publish_date desc
     </select>
 
 </mapper>
