@@ -1,13 +1,11 @@
 package com.cqupt.knowtolearn.service.chapter.stateflow;
 
 import com.cqupt.knowtolearn.common.Constants;
-import com.cqupt.knowtolearn.service.chapter.stateflow.event.*;
 import com.cqupt.knowtolearn.service.chapter.stateflow.event.ArraignmentState;
 import com.cqupt.knowtolearn.service.chapter.stateflow.event.EditingState;
 import com.cqupt.knowtolearn.service.chapter.stateflow.event.PassState;
 import com.cqupt.knowtolearn.service.chapter.stateflow.event.PublishState;
 import com.cqupt.knowtolearn.service.chapter.stateflow.event.RefuseState;
-import com.cqupt.knowtolearn.service.course.stateflow.event.*;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;

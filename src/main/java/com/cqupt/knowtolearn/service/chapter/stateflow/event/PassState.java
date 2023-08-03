@@ -28,6 +28,11 @@ public class PassState extends AbstractState {
     }
 
     @Override
+    public Result checkRevoke(Integer mediaId, Enum<Constants.MediaState> currentState) {
+        return Result.fail("已审核媒资不可撤审");
+    }
+
+    @Override
     public Result checkPass(Integer mediaId, Enum<Constants.MediaState> currentState) {
         return Result.fail("已审核媒资不可重复审核");
     }
@@ -41,5 +46,10 @@ public class PassState extends AbstractState {
     public Result publish(Integer mediaId, Enum<Constants.MediaState> currentState) {
         boolean isSuccess = courseDetailsService.alterStatus(mediaId, currentState, Constants.MediaState.PUBLISH);
         return isSuccess ? Result.success(200, "媒资发布成功") : Result.fail("媒资状态变更失败");
+    }
+
+    @Override
+    public Result publishRevoke(Integer mediaId, Enum<Constants.MediaState> currentState) {
+        return Result.fail("已审核媒资不可取消发布");
     }
 }

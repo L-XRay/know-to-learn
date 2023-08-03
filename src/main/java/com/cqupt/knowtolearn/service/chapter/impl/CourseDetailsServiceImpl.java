@@ -14,6 +14,7 @@ import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import com.cqupt.knowtolearn.model.po.user.User;
+import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.qcloud.cos.http.HttpMethodName;
@@ -51,7 +52,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
     private CosService cosService;
 
     @Override
-    public void addCourseChapter(ChapterReq req) {
+    public Integer addCourseChapter(ChapterReq req) {
         CourseDetails courseDetails = new CourseDetails();
         courseDetails.setCourseId(req.getCourseId());
         courseDetails.setChapterName(req.getChapterName());
@@ -64,6 +65,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         if(insert!=1){
             throw new RuntimeException("章节创建失败");
         }
+        return courseDetails.getId();
     }
 
     @Override
@@ -83,7 +85,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
     }
 
     @Override
-    public URL addChapterMedia(MediaReq req) {
+    public Map<String,Object> addChapterMedia(MediaReq req) {
         CosRes signature = cosService.getOrgMaterialSignature(HttpMethodName.PUT, req.getSuffix());
         CourseDetails courseDetails = new CourseDetails();
         courseDetails.setParentId(req.getChapterId());
@@ -97,7 +99,10 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         if(insert!=1){
             throw new RuntimeException("章节视频创建失败");
         }
-        return signature.getRequestURL();
+        Map<String,Object> map = new HashMap<>();
+        map.put("url",signature);
+        map.put("data",courseDetails);
+        return map;
     }
 
     @Override
@@ -180,5 +185,10 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         if (update!=1) {
             throw new RuntimeException("修改章节失败");
         }
+    }
+
+    @Override
+    public List<CourseDetailVO> getPendingMediaList() {
+        return courseDetailsDao.selectPendingMediaList();
     }
 }

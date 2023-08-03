@@ -3,6 +3,7 @@ package com.cqupt.knowtolearn.service.user;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.po.user.Org;
+import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
 import org.aspectj.weaver.ast.Or;
 
@@ -29,4 +30,6 @@ public interface IOrgService extends IService<Org> {
     void updateOrgName(Integer userId, String orgName);
 
     void updateOrgIntro(Integer userId, String introduction);
+
+    OrgHomeVO getOrgHome(Integer orgId);
 }

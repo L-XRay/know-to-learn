@@ -13,6 +13,8 @@ public class CourseDetailDTO {
 
     private Integer pid;
 
+    private String videoUrl;
+
     private String name;
 
     private Integer orderBy;
@@ -69,11 +71,20 @@ public class CourseDetailDTO {
         this.child = child;
     }
 
+    public String getVideoUrl() {
+        return videoUrl;
+    }
+
+    public void setVideoUrl(String videoUrl) {
+        this.videoUrl = videoUrl;
+    }
+
     @Override
     public String toString() {
         return "CourseDetailDTO{" +
                 "id=" + id +
                 ", pid=" + pid +
+                ", videoUrl='" + videoUrl + '\'' +
                 ", name='" + name + '\'' +
                 ", orderBy=" + orderBy +
                 ", status=" + status +

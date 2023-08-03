@@ -41,6 +41,7 @@
         <result column="tags" property="tags" />
         <result column="category" property="category" />
         <result column="pic" property="pic" />
+        <result column="orgId" property="orgId" />
         <result column="orgName" property="orgName" />
         <result column="avatar" property="avatar" />
         <result column="isAuthor" property="isAuthor" />
@@ -73,7 +74,9 @@
     </select>
 
     <select id="selectCourseVoById" parameterType="java.lang.Integer" resultMap="courseVoMap">
-        select c.name name,
+        select
+               c.org_id orgId,
+               c.name name,
                c.description introduction,
                c.category,
                c.pic,

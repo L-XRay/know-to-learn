@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
  */
 public class CourseVO {
 
+    private Integer orgId;
+
     /**
      * 机构名称
      */
@@ -46,6 +48,14 @@ public class CourseVO {
     private String tags;
 
     private boolean isAuthor;
+
+    public Integer getOrgId() {
+        return orgId;
+    }
+
+    public void setOrgId(Integer orgId) {
+        this.orgId = orgId;
+    }
 
     public String getOrgName() {
         return orgName;

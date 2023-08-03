@@ -2,6 +2,7 @@ package com.cqupt.knowtolearn.dao.user;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.cqupt.knowtolearn.model.po.user.Org;
+import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -17,4 +18,6 @@ import java.util.List;
 public interface IOrgDao extends BaseMapper<Org> {
 
     List<OrgVO> selectPendingOrgList();
+
+    OrgHomeVO selectOrgCourse(Integer orgId);
 }

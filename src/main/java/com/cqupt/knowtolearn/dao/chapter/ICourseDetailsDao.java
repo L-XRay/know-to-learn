@@ -5,6 +5,8 @@ import com.cqupt.knowtolearn.model.dto.AlterCourseStateDTO;
 import com.cqupt.knowtolearn.model.dto.AlterMediaStateDTO;
 import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
+import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
+import com.cqupt.knowtolearn.model.vo.OrgVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -26,5 +28,7 @@ public interface ICourseDetailsDao extends BaseMapper<CourseDetails> {
     int alterState(AlterMediaStateDTO alterStateVo);
 
     List<CourseDetailDTO> selectTreeNodes(Integer courseId);
+
+    List<CourseDetailVO> selectPendingMediaList();
 
 }

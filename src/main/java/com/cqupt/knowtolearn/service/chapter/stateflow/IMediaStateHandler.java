@@ -27,6 +27,14 @@ public interface IMediaStateHandler {
     Result arraignment(Integer mediaId, Enum<Constants.MediaState> currentStatus);
 
     /**
+     * 撤回审核
+     * @param mediaId       媒资ID
+     * @param currentStatus 当前状态
+     * @return              审核结果
+     */
+    Result checkRevoke(Integer mediaId, Enum<Constants.MediaState> currentStatus);
+
+    /**
      * 审核通过
      * @param mediaId       媒资ID
      * @param currentStatus 当前状态
@@ -49,5 +57,13 @@ public interface IMediaStateHandler {
      * @return              审核结果
      */
     Result publish(Integer mediaId, Enum<Constants.MediaState> currentStatus);
+
+    /**
+     * 取消发布
+     * @param mediaId       媒资ID
+     * @param currentStatus 当前状态
+     * @return              审核结果
+     */
+    Result publishRevoke(Integer mediaId, Enum<Constants.MediaState> currentStatus);
 
 }

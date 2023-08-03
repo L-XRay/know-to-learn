@@ -9,6 +9,7 @@ import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author Ray
@@ -23,9 +24,9 @@ public interface ICourseBaseService extends IService<CourseBase> {
 
     CourseBase selectOneById(Integer courseId);
 
-    CourseBase addCourse(Integer userId, CourseReq req);
+    Map<String, Object> addCourse(Integer userId, CourseReq req);
 
-    List<OrgCourseVO> getOrgCourse(Integer userId);
+    List<OrgCourseVO> getOwnCourse(Integer userId);
 
     void deleteCourse(Integer courseId);
 

@@ -21,8 +21,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
 * @author Ray
@@ -42,7 +44,6 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
     @Resource
     private ICourseDetailsDao courseDetailsDao;
 
-
     @Override
     public List<HomeCourseVO> getHomeCourse() {
         return courseBaseDao.randCourse();
@@ -61,7 +62,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
     }
 
     @Override
-    public CourseBase addCourse(Integer userId, CourseReq req) {
+    public Map<String, Object> addCourse(Integer userId, CourseReq req) {
         User user = userDao.selectById(userId);
         Integer orgId = user.getOrgId();
         CourseBase courseBase = new CourseBase();
@@ -75,17 +76,27 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         courseBase.setStatus(1);
         courseBase.setCreateDate(LocalDateTime.now());
         courseBase.setChangeDate(LocalDateTime.now());
+        courseBase.setPublishDate(LocalDateTime.now());
 
         int insert = courseBaseDao.insert(courseBase);
         if (insert!=1) {
             throw new RuntimeException("创建课程失败");
         }
 
-        return courseBase;
+        ZoneId beijingZoneId = ZoneId.of("Asia/Shanghai");
+        ZonedDateTime zonedDateTime = courseBase.getPublishDate().atZone(beijingZoneId);
+        long publishTime = zonedDateTime.toInstant().toEpochMilli();
+        Map<String,Object> map = new HashMap<>();
+        map.put("courseId",courseBase.getId());
+        map.put("courseName",courseBase.getName());
+        map.put("coverUrl",courseBase.getPic());
+        map.put("publishTime",publishTime);
+
+        return map;
     }
 
     @Override
-    public List<OrgCourseVO> getOrgCourse(Integer userId) {
+    public List<OrgCourseVO> getOwnCourse(Integer userId) {
         User user = userDao.selectById(userId);
         Integer orgId = user.getOrgId();
         return courseBaseDao.selectOrgCourse(orgId);
@@ -97,6 +108,10 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         boolean b = this.removeById(courseId);
         if (!b) {
             throw new RuntimeException("课程基本信息删除失败");
+        }
+        List<CourseDetails> courseDetails = courseDetailsDao.selectList(new LambdaQueryWrapper<CourseDetails>().eq(CourseDetails::getCourseId, courseId));
+        if (courseDetails==null||courseDetails.size()==0) {
+            return;
         }
         int delete = courseDetailsDao.delete(new LambdaQueryWrapper<CourseDetails>().eq(CourseDetails::getCourseId, courseId));
         if (delete==0) {
@@ -110,4 +125,5 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         Integer orgId = user.getOrgId();
         return courseBaseDao.selectCourseVoById(orgId, courseId);
     }
+
 }

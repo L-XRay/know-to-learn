@@ -1,10 +1,13 @@
 package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Result;
+import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
 import com.cqupt.knowtolearn.exception.KnowException;
 import com.cqupt.knowtolearn.model.po.course.CourseBase;
+import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
+import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +35,9 @@ public class SystemController {
 
     @Resource
     private ICourseBaseService courseBaseService;
+
+    @Resource
+    private ICourseDetailsService courseDetailsService;
 
     private static final Map<String, String> nameMap = new HashMap<>();
     static {
@@ -92,7 +98,7 @@ public class SystemController {
     @GetMapping("/admin/pending/org")
     public Result getPendingOrgList(HttpServletRequest request) {
         List<OrgVO> pendingOrgList = orgService.getPendingOrgList();
-        if (pendingOrgList==null || pendingOrgList.size()==0) {
+        if (pendingOrgList==null || pendingOrgList.isEmpty()) {
             return Result.success(200,"不存在未处理的机构申请");
         }
         return Result.success("获取未处理的机构申请成功",pendingOrgList);
@@ -116,4 +122,12 @@ public class SystemController {
         return Result.success("审核拒绝机构申请成功",true);
     }
 
+    @GetMapping("/admin/pending/media")
+    public Result getPendingMediaList(HttpServletRequest request) {
+        List<CourseDetailVO> pendingMediaList = courseDetailsService.getPendingMediaList();
+        if (pendingMediaList==null || pendingMediaList.isEmpty()) {
+            return Result.success(200,"不存在未处理的机构申请");
+        }
+        return Result.success("获取未处理的机构申请成功",pendingMediaList);
+    }
 }

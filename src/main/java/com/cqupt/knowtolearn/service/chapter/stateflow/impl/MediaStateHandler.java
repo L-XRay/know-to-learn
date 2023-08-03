@@ -25,6 +25,11 @@ public class MediaStateHandler extends StateConfig implements IMediaStateHandler
     }
 
     @Override
+    public Result checkRevoke(Integer mediaId, Enum<Constants.MediaState> currentStatus) {
+        return stateGroup.get(currentStatus).checkRevoke(mediaId,currentStatus);
+    }
+
+    @Override
     public Result checkPass(Integer mediaId, Enum<Constants.MediaState> currentStatus) {
         return stateGroup.get(currentStatus).checkPass(mediaId,currentStatus);
     }
@@ -37,5 +42,10 @@ public class MediaStateHandler extends StateConfig implements IMediaStateHandler
     @Override
     public Result publish(Integer mediaId, Enum<Constants.MediaState> currentStatus) {
         return stateGroup.get(currentStatus).publish(mediaId, currentStatus);
+    }
+
+    @Override
+    public Result publishRevoke(Integer mediaId, Enum<Constants.MediaState> currentStatus) {
+        return stateGroup.get(currentStatus).publishRevoke(mediaId, currentStatus);
     }
 }

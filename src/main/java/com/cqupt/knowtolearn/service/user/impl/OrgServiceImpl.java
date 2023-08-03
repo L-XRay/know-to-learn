@@ -10,6 +10,7 @@ import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.po.system.StationMessage;
 import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.model.po.user.User;
+import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
 import com.cqupt.knowtolearn.service.system.IStationMessageService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
@@ -169,6 +170,11 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
         if (update!=1) {
             throw new RuntimeException("修改机构介绍失败");
         }
+    }
+
+    @Override
+    public OrgHomeVO getOrgHome(Integer orgId) {
+        return orgDao.selectOrgCourse(orgId);
     }
 
     private Org getOrg(Integer userId) {

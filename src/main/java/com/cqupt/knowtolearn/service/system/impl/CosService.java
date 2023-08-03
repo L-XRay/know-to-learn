@@ -4,10 +4,12 @@ import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cqupt.knowtolearn.config.CosConfig;
+import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.exception.KnowException;
 import com.cqupt.knowtolearn.model.dto.req.CosReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
+import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.utils.DateUtil;
 import com.qcloud.cos.COSClient;
@@ -39,6 +41,9 @@ public class CosService {
 
     @Resource
     private IUserDao userDao;
+
+    @Resource
+    private ICourseDetailsDao courseDetailsDao;
 
     public Map<String,Object> getCredential() {
         TreeMap<String, Object> config = cosConfig.getConfig();
@@ -134,6 +139,50 @@ public class CosService {
         String bucketName = cosConfig.getBucket();
         String key = getPath(suffix);
         Date expirationDate = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
+        // 请求的 HTTP 方法，上传请求用 PUT，下载请求用 GET，删除请求用 DELETE
+        URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
+        CosRes cosRes = new CosRes();
+        cosRes.setRequestURL(url);
+        cosRes.setResourceURL(cosConfig.getVisitUrl() + key);
+        return cosRes;
+    }
+
+    public CosRes getCourseMediaSignature(HttpMethodName httpMethodName, Integer chapterId, String chapterName, String suffix) {
+        Map<String, Object> credential = getCredential();
+        String secretId = credential.get("secretId").toString();
+        String secretKey = credential.get("secretKey").toString();
+        String token = credential.get("token").toString();
+        COSClient cosClient = createCosClient(secretId, secretKey, token);
+
+        String bucketName = cosConfig.getBucket();
+
+//        // 对象键(Key)是对象在存储桶中的唯一标识。详情请参见 [对象键](https://cloud.tencent.com/document/product/436/13324)
+//        String key = cosReq.getFileName();
+
+//        if ("PUT".equals(cosReq.getType())) {
+        String key = getPath(suffix);
+//        }
+
+//        if ("user".equals(cosReq.getRegion())) {
+        CourseDetails courseDetails = courseDetailsDao.selectById(chapterId);
+        if (HttpMethodName.PUT == httpMethodName) {
+            courseDetails.setMedia(cosConfig.getVisitUrl() + key);
+            if (chapterName!=null) {
+                courseDetails.setChapterName(chapterName);
+            }
+        }
+        if (HttpMethodName.DELETE == httpMethodName){
+            courseDetails.setMedia(null);
+        }
+        courseDetailsDao.updateById(courseDetails);
+//        }
+
+
+
+        // 设置签名过期时间(可选), 若未进行设置则默认使用 ClientConfig 中的签名过期时间(1小时)
+        // 这里设置签名在半个小时后过期
+        Date expirationDate = new Date(System.currentTimeMillis() + 30 * 60 * 1000);
+
         // 请求的 HTTP 方法，上传请求用 PUT，下载请求用 GET，删除请求用 DELETE
         URL url = cosClient.generatePresignedUrl(bucketName, key, expirationDate, httpMethodName);
         CosRes cosRes = new CosRes();

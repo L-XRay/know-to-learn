@@ -26,7 +26,6 @@ public abstract class AbstractState {
      */
     public abstract Result editing(Integer mediaId, Enum<Constants.MediaState> currentState);
 
-
     /**
      * 媒资提审
      * @param mediaId      媒资ID
@@ -34,6 +33,14 @@ public abstract class AbstractState {
      * @return 执行结果
      */
     public abstract Result arraignment(Integer mediaId, Enum<Constants.MediaState> currentState);
+
+    /**
+     * 媒资撤审
+     * @param mediaId      媒资ID
+     * @param currentState 当前状态
+     * @return 执行结果
+     */
+    public abstract Result checkRevoke(Integer mediaId, Enum<Constants.MediaState> currentState);
 
     /**
      * 审核通过
@@ -58,4 +65,12 @@ public abstract class AbstractState {
      * @return 执行结果
      */
     public abstract Result publish(Integer mediaId, Enum<Constants.MediaState> currentState);
+
+    /**
+     * 取消发布
+     * @param mediaId      媒资ID
+     * @param currentState 当前状态
+     * @return 执行结果
+     */
+    public abstract Result publishRevoke(Integer mediaId, Enum<Constants.MediaState> currentState);
 }

@@ -12,9 +12,7 @@
         <result column="create_time" property="createTime" />
         <result column="status" property="status" />
     </resultMap>
-
-
-    <!-- 通用查询映射结果 -->
+    
     <resultMap id="OrgVoMap" type="com.cqupt.knowtolearn.model.vo.OrgVO">
         <id column="id" property="id" />
         <result column="orgName" property="orgName" />
@@ -25,6 +23,24 @@
         <result column="createTime" property="createTime" />
     </resultMap>
 
+    <resultMap id="orgHomeMap" type="com.cqupt.knowtolearn.model.vo.OrgHomeVO">
+        <result column="orgId" property="orgId" />
+        <result column="userId" property="userId" />
+        <result column="orgName" property="orgName" />
+        <result column="introduction" property="introduction" />
+        <collection property="courses" ofType="com.cqupt.knowtolearn.model.dto.OrgCourseDTO">
+            <result column="courseId" property="courseId" />
+            <result column="courseName" property="courseName" />
+            <result column="coverUrl" property="coverUrl" />
+            <result column="teachers" property="teachers" />
+            <result column="description" property="description" />
+            <result column="tags" property="tags" />
+            <result column="category" property="category" />
+            <result column="publishTime" property="publishTime"/>
+        </collection>
+    </resultMap>
+
+
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
         id, user_id, name, intro, materials, create_time, status
@@ -32,6 +48,26 @@
 
     <select id="selectPendingOrgList" resultMap="OrgVoMap">
         select o.id, o.name orgName,u.username, u.nickname,o.intro introduction,o.materials, UNIX_TIMESTAMP(o.create_time)*1000 createTime from org o inner join user u on o.user_id = u.id where o.status = 0
+    </select>
+    
+    <select id="selectOrgCourse" parameterType="java.lang.Integer" resultMap="orgHomeMap">
+        select u.org_id                               orgId,
+               u.id                                   userId,
+               o.name                                 orgName,
+               o.intro                                introduction,
+               o.materials                            materials,
+               cb.id                                  courseId,
+               cb.name                                courseName,
+               cb.pic                                 coverUrl,
+               cb.description                         description,
+               cb.category                            category,
+               cb.tags                                tags,
+               cb.teachers                            teachers,
+               UNIX_TIMESTAMP(cb.publish_date) * 1000 publishTime
+        from user u
+                 join org o on o.id = u.org_id
+                 inner join course_base cb on o.id = cb.org_id
+        where u.org_id = #{orgId}
     </select>
 
 </mapper>

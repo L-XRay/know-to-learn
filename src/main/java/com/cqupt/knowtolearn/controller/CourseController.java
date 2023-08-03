@@ -16,6 +16,7 @@ import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import com.qcloud.cos.http.HttpMethodName;
+import lombok.val;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -58,7 +59,7 @@ public class CourseController {
         }
         return Result.success("获取首页课程成功",homeCourse);
     }
-//
+/**
 //    @PostMapping("/org/course/audit/arraignment")
 //    public Result arraignment(HttpServletRequest request, @RequestBody AlterStateReq req) {
 //        Integer courseId = req.getCourseId();
@@ -97,12 +98,11 @@ public class CourseController {
 //        Integer currentState = req.getCurrentState();
 //        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
 //        return stateHandler.publish(courseId, currentStateEum);
-//    }
-
+*/
     @PostMapping("/org/course/create")
     public Result create(HttpServletRequest request, @RequestBody CourseReq req) {
-        CourseBase courseBase = courseBaseService.addCourse(UserHolder.getUser(), req);
-        return Result.success("创建课程成功",courseBase);
+        Map<String, Object> data = courseBaseService.addCourse(UserHolder.getUser(), req);
+        return Result.success("创建课程成功",data);
     }
 
     @PostMapping("/org/course/pic")
@@ -114,8 +114,8 @@ public class CourseController {
 
     @PostMapping("/org/course/create/chapter")
     public Result createChapter(HttpServletRequest request, @RequestBody ChapterReq req) {
-        courseDetailsService.addCourseChapter(req);
-        return Result.success("创建课程章节成功",true);
+        Integer chapterId = courseDetailsService.addCourseChapter(req);
+        return Result.success("创建课程章节成功",chapterId);
     }
 
     @GetMapping("/org/course/{courseId}/chapter")
@@ -126,14 +126,23 @@ public class CourseController {
 
     @PostMapping("/org/course/create/chapter/media")
     public Result createChapterMedia(HttpServletRequest request, @RequestBody MediaReq req) {
-        URL url = courseDetailsService.addChapterMedia(req);
-        return Result.success("创建章节视频信息成功",url);
+        Map<String, Object> data = courseDetailsService.addChapterMedia(req);
+        return Result.success("创建章节视频信息成功",data);
     }
 
     @GetMapping("/org/course/chapter/{chapterId}/media")
     public Result getMedia(HttpServletRequest request, @PathVariable("chapterId") Integer chapterId) {
         List<Map<String, Object>> data = courseDetailsService.getMedia(chapterId);
         return Result.success("获取章节视频成功",data);
+    }
+
+    @PostMapping("/org/course/chapter/media/update")
+    public Result uploadMedia(HttpServletRequest request,@RequestBody Map<String,Object> req) {
+        String chapterName = (String) req.get("name");
+        String suffix = (String) req.get("suffix");
+        Integer chapterId = (Integer) req.get("chapterId");
+        CosRes cosRes = cosService.getCourseMediaSignature(HttpMethodName.PUT,chapterId,chapterName, suffix);
+        return Result.success("获取COS签名URL成功",cosRes);
     }
 
     @PostMapping("/org/course/chapter/media/audit/arraignment")
@@ -176,9 +185,25 @@ public class CourseController {
         return mediaStateHandler.editing(mediaId,currentStateEum);
     }
 
+    @PostMapping("/org/course/chapter/media/audit/checkRevoke")
+    public Result checkRevokeMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.checkRevoke(mediaId,currentStateEum);
+    }
+
+    @PostMapping("/org/course/chapter/media/audit/publishRevoke")
+    public Result publishRevokeMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
+        Integer mediaId = req.get("mediaId");
+        Integer currentState = req.get("currentState");
+        Constants.MediaState currentStateEum = getCurrentStateEnumM(currentState);
+        return mediaStateHandler.publishRevoke(mediaId,currentStateEum);
+    }
+
     @GetMapping("/org/course/all")
     public Result getOwnOrgCourse(HttpServletRequest request) {
-        List<OrgCourseVO> course = courseBaseService.getOrgCourse(UserHolder.getUser());
+        List<OrgCourseVO> course = courseBaseService.getOwnCourse(UserHolder.getUser());
         return Result.success("获取本机构课程成功",course);
     }
 

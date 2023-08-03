@@ -6,6 +6,7 @@ import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
 import com.cqupt.knowtolearn.model.dto.req.ChapterReq;
 import com.cqupt.knowtolearn.model.dto.req.MediaReq;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
+import com.cqupt.knowtolearn.model.vo.CourseDetailVO;
 
 import java.net.URL;
 import java.util.List;
@@ -18,11 +19,11 @@ import java.util.Map;
  */
 public interface ICourseDetailsService extends IService<CourseDetails> {
 
-    void addCourseChapter(ChapterReq req);
+    Integer addCourseChapter(ChapterReq req);
 
     List<Map<String,Object>> getChapter(Integer courseId);
 
-    URL addChapterMedia(MediaReq req);
+    Map<String,Object> addChapterMedia(MediaReq req);
 
     List<Map<String,Object>> getMedia(Integer chapterId);
 
@@ -33,4 +34,6 @@ public interface ICourseDetailsService extends IService<CourseDetails> {
     boolean alterStatus(Integer mediaId, Enum<Constants.MediaState> beforeState, Enum<Constants.MediaState> afterState);
 
     Map<String,Object> getCourseDetail(Integer userId, Integer courseId);
+
+    List<CourseDetailVO> getPendingMediaList();
 }

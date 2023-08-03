@@ -4,6 +4,7 @@ import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.user.Org;
+import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import com.cqupt.knowtolearn.utils.UserHolder;
@@ -62,4 +63,9 @@ public class OrgController {
         return Result.success(200,"修改机构介绍成功");
     }
 
+    @GetMapping("/user/org/{orgId}/home")
+    public Result getOrgInfo(HttpServletRequest request,@PathVariable("orgId") Integer orgId) {
+        OrgHomeVO data = orgService.getOrgHome(orgId);
+        return Result.success("获取机构主页信息成功",data);
+    }
 }

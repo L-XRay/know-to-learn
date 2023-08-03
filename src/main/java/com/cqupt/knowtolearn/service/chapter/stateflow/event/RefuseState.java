@@ -25,6 +25,11 @@ public class RefuseState extends AbstractState {
     }
 
     @Override
+    public Result checkRevoke(Integer mediaId, Enum<Constants.MediaState> currentState) {
+        return Result.fail("已审核媒资不可撤审");
+    }
+
+    @Override
     public Result checkPass(Integer mediaId, Enum<Constants.MediaState> currentState) {
         return Result.fail("已审核媒资不可重复审核");
     }
@@ -37,5 +42,10 @@ public class RefuseState extends AbstractState {
     @Override
     public Result publish(Integer mediaId, Enum<Constants.MediaState> currentState) {
         return Result.fail("媒资审核拒绝不可发布");
+    }
+
+    @Override
+    public Result publishRevoke(Integer mediaId, Enum<Constants.MediaState> currentState) {
+        return Result.fail("媒资审核拒绝不可取消发布");
     }
 }

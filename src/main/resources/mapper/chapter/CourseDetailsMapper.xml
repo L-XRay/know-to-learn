@@ -19,8 +19,21 @@
         <id column="id" property="id" />
         <result column="parent_id" property="pid" />
         <result column="chapter_name" property="name" />
+        <result column="media" property="videoUrl" />
         <result column="order_by" property="orderBy" />
         <result column="status" property="status" />
+    </resultMap>
+
+    <resultMap id="courseDetailVOMap" type="com.cqupt.knowtolearn.model.vo.CourseDetailVO">
+        <result column="orgId" property="orgId" />
+        <result column="orgName" property="orgName" />
+        <result column="courseId" property="courseId" />
+        <result column="courseName" property="courseName" />
+        <result column="mediaId" property="mediaId" />
+        <result column="name" property="name" />
+        <result column="url" property="url" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
@@ -35,6 +48,22 @@
     </update>
 
     <select id="selectTreeNodes" parameterType="java.lang.Integer" resultMap="courseDetailDTOMap">
-        select id,chapter_name,parent_id,order_by,status from course_details where course_id = #{courseId}
+        select id,chapter_name,parent_id,order_by,media,status from course_details where course_id = #{courseId}
+    </select>
+
+    <select id="selectPendingMediaList" resultMap="courseDetailVOMap" >
+        select o.id                                  orgId,
+               o.name                                orgName,
+               cb.id                                 courseId,
+               cb.name                               courseName,
+               cd.id                                 mediaId,
+               cd.chapter_name                       name,
+               cd.media                              url,
+               cd.status,
+               UNIX_TIMESTAMP(cd.create_date) * 1000 createTime
+        from course_details cd
+                 inner join course_base cb on cd.course_id = cb.id
+                 inner join org o on cb.org_id = o.id
+        where cd.status = 2
     </select>
 </mapper>
