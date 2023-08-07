@@ -105,7 +105,10 @@
         where cb.status=6
         <trim prefix="and" prefixOverrides="AND | OR" suffixOverrides="and">
             <if test="null != key">
-                cb.name like concat('%',#{key},'%') or c.name like concat('%',#{key},'%')
+                cb.name like concat('%',#{key},'%')
+                or c.name like concat('%',#{key},'%')
+                or cb.tags like concat('%',#{key},'%')
+                or cb.teachers like concat('%',#{key},'%')
             </if>
         </trim>
     </select>
