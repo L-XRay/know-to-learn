@@ -3,8 +3,11 @@ package com.cqupt.knowtolearn.service.chapter.stateflow;
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.common.Result;
 import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
+import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
+import com.cqupt.knowtolearn.service.system.IStationMessageService;
+import com.cqupt.knowtolearn.service.user.IUserService;
 
 import javax.annotation.Resource;
 
@@ -17,6 +20,15 @@ public abstract class AbstractState {
 
     @Resource
     protected ICourseDetailsService courseDetailsService;
+
+    @Resource
+    protected IStationMessageService stationMessageService;
+
+    @Resource
+    protected ICourseBaseService courseBaseService;
+
+    @Resource
+    protected IUserService userService;
 
     /**
      * 媒资编辑中

@@ -25,4 +25,6 @@ public interface IUserService {
 
     User findUserByUsername(String username);
 
+    User findOrgUser(Integer orgId);
+
 }

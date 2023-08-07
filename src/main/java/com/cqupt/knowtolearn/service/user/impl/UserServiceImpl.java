@@ -185,4 +185,9 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
         User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
         return user;
     }
+
+    @Override
+    public User findOrgUser(Integer orgId) {
+        return userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getOrgId,orgId));
+    }
 }
