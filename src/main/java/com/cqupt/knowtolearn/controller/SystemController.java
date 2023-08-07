@@ -71,15 +71,15 @@ public class SystemController {
 
         List<Map<String,String>> list = new ArrayList<>();
 
-        // 获取完整的URL
-        String url = request.getRequestURL().toString();
-
-        // 获取URI部分
-        String uri = request.getRequestURI();
-
-        // 获取去掉URI部分的URL
-        // http://127.0.0.1:8090/chief/
-        String baseUrl = url.substring(0, url.indexOf(uri) + uri.length()-3);
+//        // 获取完整的URL
+//        String url = request.getRequestURL().toString();
+//
+//        // 获取URI部分
+//        String uri = request.getRequestURI();
+//
+//        // 获取去掉URI部分的URL
+//        // http://127.0.0.1:8090/chief/
+//        String baseUrl = url.substring(0, url.indexOf(uri) + uri.length()-3);
 
         List<String> fileNames = Arrays.asList("xr.jpg", "ysq.jpg", "ltt.jpg", "zly.jpg", "ljd.jpg", "zyq.jpg");
 
@@ -89,7 +89,7 @@ public class SystemController {
             String name = nameMap.getOrDefault(prefix, "未知"); // 如果前缀没有对应的名字，则使用默认值
             Map<String, String> map = new HashMap<>();
             map.put("name", name);
-            map.put("avatar", baseUrl + fileName);
+            map.put("avatar", "http://162.14.74.132:8090/chief/" + fileName);
             list.add(map);
         }
         return Result.success("获取主创人员信息成功",list);

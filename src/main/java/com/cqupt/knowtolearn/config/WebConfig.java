@@ -7,13 +7,13 @@ import com.cqupt.knowtolearn.interceptor.RefreshTokenInterceptor;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
 import com.cqupt.knowtolearn.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.Filter;
 
 /**
  * @author Ray
@@ -51,5 +51,10 @@ public class WebConfig implements WebMvcConfigurer {
 
         registry.addInterceptor(new AdminInterceptor(jwtUtil)).addPathPatterns("/admin/**").order(2);
         registry.addInterceptor(new OrgInterceptor(jwtUtil)).addPathPatterns("/org/**").order(2);
+    }
+
+    @Bean
+    public Filter corsFilter() {
+        return new CorsFilter();
     }
 }

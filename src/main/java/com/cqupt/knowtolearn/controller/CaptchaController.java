@@ -8,10 +8,7 @@ import com.cqupt.knowtolearn.model.dto.res.CaptchaRes;
 import com.cqupt.knowtolearn.service.captcha.CaptchaStrategy;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaService;
 import com.cqupt.knowtolearn.service.captcha.ICaptchaStore;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -22,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
  * @description
  */
 @RestController
+@CrossOrigin("")
 @RequestMapping("/captcha")
 public class CaptchaController {
 
