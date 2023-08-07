@@ -23,7 +23,7 @@ public interface ICourseDetailsDao extends BaseMapper<CourseDetails> {
     /**
      * 变更媒资状态
      *
-     * @param alterStateVo  [courseId、beforeState、afterState]
+     * @param alterStateVo  [mediaId、beforeState、afterState]
      * @return 更新数量
      */
     int alterState(AlterMediaStateDTO alterStateVo);

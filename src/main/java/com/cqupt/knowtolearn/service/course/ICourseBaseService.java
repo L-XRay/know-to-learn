@@ -31,4 +31,8 @@ public interface ICourseBaseService extends IService<CourseBase> {
     void deleteCourse(Integer courseId);
 
     CourseVO selectCourseVoById(Integer userId, Integer courseId);
+
+    Map<String, Object> updateCourse(Integer userId, Integer courseId, CourseReq req);
+
+    List<HomeCourseVO> selectCourseList(String key);
 }

@@ -5,12 +5,15 @@ import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cqupt.knowtolearn.config.CosConfig;
 import com.cqupt.knowtolearn.dao.chapter.ICourseDetailsDao;
+import com.cqupt.knowtolearn.dao.course.ICourseBaseDao;
 import com.cqupt.knowtolearn.dao.user.IUserDao;
 import com.cqupt.knowtolearn.exception.KnowException;
 import com.cqupt.knowtolearn.model.dto.req.CosReq;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
 import com.cqupt.knowtolearn.model.po.chapter.CourseDetails;
+import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.po.user.User;
+import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.utils.DateUtil;
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -44,6 +47,9 @@ public class CosService {
 
     @Resource
     private ICourseDetailsDao courseDetailsDao;
+
+    @Resource
+    private ICourseBaseDao courseBaseDao;
 
     public Map<String,Object> getCredential() {
         TreeMap<String, Object> config = cosConfig.getConfig();
@@ -166,6 +172,7 @@ public class CosService {
 //        if ("user".equals(cosReq.getRegion())) {
         CourseDetails courseDetails = courseDetailsDao.selectById(chapterId);
         if (HttpMethodName.PUT == httpMethodName) {
+            courseDetails.setStatus(1);
             courseDetails.setMedia(cosConfig.getVisitUrl() + key);
             if (chapterName!=null) {
                 courseDetails.setChapterName(chapterName);

@@ -14,8 +14,8 @@ import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
-import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
+import com.cqupt.knowtolearn.service.system.impl.CosService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,7 +73,7 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         courseBase.setDescription(req.getIntroduction());
         courseBase.setPic(req.getPic());
         courseBase.setOrgId(orgId);
-        courseBase.setStatus(1);
+        courseBase.setStatus(6);
         courseBase.setCreateDate(LocalDateTime.now());
         courseBase.setChangeDate(LocalDateTime.now());
         courseBase.setPublishDate(LocalDateTime.now());
@@ -126,4 +126,41 @@ public class CourseBaseServiceImpl extends ServiceImpl<ICourseBaseDao, CourseBas
         return courseBaseDao.selectCourseVoById(orgId, courseId);
     }
 
+    @Override
+    public Map<String, Object> updateCourse(Integer userId,Integer courseId, CourseReq req) {
+        User user = userDao.selectById(userId);
+        Integer orgId = user.getOrgId();
+        CourseBase courseBase = courseBaseDao.selectById(courseId);
+        if (!orgId.equals(courseBase.getOrgId())) {
+            throw new RuntimeException("您无权修改该课程");
+        }
+        courseBase.setName(req.getName());
+        courseBase.setTeachers(req.getTeachers());
+        courseBase.setTags(req.getTags());
+        courseBase.setCategory(req.getCategory());
+        courseBase.setDescription(req.getIntroduction());
+        courseBase.setChangeDate(LocalDateTime.now());
+        courseBase.setPublishDate(LocalDateTime.now());
+        courseBase.setPic(req.getPic());
+        int update = courseBaseDao.updateById(courseBase);
+        if (update!=1) {
+            throw new RuntimeException("修改课程失败");
+        }
+
+        ZoneId beijingZoneId = ZoneId.of("Asia/Shanghai");
+        ZonedDateTime zonedDateTime = courseBase.getPublishDate().atZone(beijingZoneId);
+        long publishTime = zonedDateTime.toInstant().toEpochMilli();
+        Map<String,Object> map = new HashMap<>();
+        map.put("courseId",courseBase.getId());
+        map.put("courseName",courseBase.getName());
+        map.put("coverUrl",courseBase.getPic());
+        map.put("publishTime",publishTime);
+
+        return map;
+    }
+
+    @Override
+    public List<HomeCourseVO> selectCourseList(String key) {
+        return courseBaseDao.selectCourseList(key);
+    }
 }

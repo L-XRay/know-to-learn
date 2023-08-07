@@ -44,7 +44,8 @@ public class WebConfig implements WebMvcConfigurer {
                         "/user/refresh/token",
                         "/captcha/**",
                         "/chief/**",
-                        "/course/recommendation").order(1);
+                        "/course/recommendation",
+                        "/search").order(1);
         registry.addInterceptor(new RefreshTokenInterceptor(stringRedisTemplate,jwtUtil))
                 .addPathPatterns("/**").order(0);
 

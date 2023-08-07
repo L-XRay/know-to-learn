@@ -98,4 +98,15 @@
                  inner join user u on o.id = u.org_id
         where c.id = #{courseId}
     </select>
+
+    <select id="selectCourseList" parameterType="java.lang.String" resultMap="homeCourseMap">
+        SELECT cb.id courseId, cb.name courseName,cb.pic coverUrl,UNIX_TIMESTAMP(cb.publish_date) * 1000 publishTime,c.name orgName,c.id orgId
+        FROM course_base cb inner join org c on cb.org_id = c.id
+        where cb.status=6
+        <trim prefix="and" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != key">
+                cb.name like concat('%',#{key},'%') or c.name like concat('%',#{key},'%')
+            </if>
+        </trim>
+    </select>
 </mapper>

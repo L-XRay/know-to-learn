@@ -12,6 +12,7 @@ import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.model.po.user.User;
 import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
+import com.cqupt.knowtolearn.model.vo.QueryOrgVO;
 import com.cqupt.knowtolearn.service.system.IStationMessageService;
 import com.cqupt.knowtolearn.service.user.IOrgService;
 import com.cqupt.knowtolearn.utils.PasswordUtil;
@@ -181,5 +182,10 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
         User user = userDao.selectById(userId);
         Org org = orgDao.selectById(user.getOrgId());
         return org;
+    }
+
+    @Override
+    public List<QueryOrgVO> selectOrgList(String key) {
+        return orgDao.selectOrgList(key);
     }
 }

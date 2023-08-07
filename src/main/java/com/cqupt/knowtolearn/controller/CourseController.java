@@ -2,6 +2,7 @@ package com.cqupt.knowtolearn.controller;
 
 import com.cqupt.knowtolearn.common.Constants;
 import com.cqupt.knowtolearn.common.Result;
+import com.cqupt.knowtolearn.dao.user.IOrgDao;
 import com.cqupt.knowtolearn.model.dto.CourseDetailDTO;
 import com.cqupt.knowtolearn.model.dto.req.*;
 import com.cqupt.knowtolearn.model.dto.res.CosRes;
@@ -9,11 +10,13 @@ import com.cqupt.knowtolearn.model.po.course.CourseBase;
 import com.cqupt.knowtolearn.model.vo.CourseVO;
 import com.cqupt.knowtolearn.model.vo.HomeCourseVO;
 import com.cqupt.knowtolearn.model.vo.OrgCourseVO;
+import com.cqupt.knowtolearn.model.vo.QueryOrgVO;
 import com.cqupt.knowtolearn.service.chapter.ICourseDetailsService;
 import com.cqupt.knowtolearn.service.chapter.stateflow.IMediaStateHandler;
 import com.cqupt.knowtolearn.service.comment.ICommentService;
 import com.cqupt.knowtolearn.service.course.ICourseBaseService;
 import com.cqupt.knowtolearn.service.system.impl.CosService;
+import com.cqupt.knowtolearn.service.user.IOrgService;
 import com.cqupt.knowtolearn.utils.UserHolder;
 import com.qcloud.cos.http.HttpMethodName;
 import lombok.val;
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +54,9 @@ public class CourseController {
 
     @Resource
     private ICommentService commentService;
+
+    @Resource
+    private IOrgService orgService;
 
     @GetMapping("/course/recommendation")
     public Result getHomeCourse(HttpServletRequest request) {
@@ -141,8 +148,12 @@ public class CourseController {
         String chapterName = (String) req.get("name");
         String suffix = (String) req.get("suffix");
         Integer chapterId = (Integer) req.get("chapterId");
+        if (suffix==null|| suffix.isEmpty()) {
+            courseDetailsService.updateChapter(chapterId,chapterName);
+            return Result.success(200,"修改章节视频成功");
+        }
         CosRes cosRes = cosService.getCourseMediaSignature(HttpMethodName.PUT,chapterId,chapterName, suffix);
-        return Result.success("获取COS签名URL成功",cosRes);
+        return Result.success("修改章节视频成功",cosRes);
     }
 
     @PostMapping("/org/course/chapter/media/audit/arraignment")
@@ -222,6 +233,9 @@ public class CourseController {
     @GetMapping("/user/course/chapter/{chapterId}/details")
     public Result getChapterDetails(HttpServletRequest request,@PathVariable("chapterId") Integer chapterId) {
         Map<String, Object> data = courseDetailsService.getSimpleCourseDetail(chapterId);
+        if (data==null) {
+            return Result.fail(400,"该视频尚未发布");
+        }
         return Result.success("查询视频页信息成功",data);
     }
 
@@ -230,6 +244,12 @@ public class CourseController {
     public Result deleteCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
         courseBaseService.deleteCourse(courseId);
         return Result.success("删除课程成功",true);
+    }
+
+    @PostMapping("/org/course/{courseId}/update")
+    public Result updateCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId, @RequestBody CourseReq req) {
+        Map<String, Object> data = courseBaseService.updateCourse(UserHolder.getUser(), courseId, req);
+        return Result.success("修改课程成功",data);
     }
 
     @DeleteMapping("/org/chapter/{chapterId}/delete")
@@ -251,6 +271,16 @@ public class CourseController {
     public Result deleteCourse(HttpServletRequest request, @RequestBody CommentReq req) {
         commentService.addComment(UserHolder.getUser(),req);
         return Result.success("评论成功",true);
+    }
+
+    @GetMapping("/search")
+    public Result searchAll(HttpServletRequest request, @RequestParam String key) {
+        List<QueryOrgVO> orgList = orgService.selectOrgList(key);
+        List<HomeCourseVO> courseList = courseBaseService.selectCourseList(key);
+        Map<String,Object> data = new HashMap<>();
+        data.put("courses",courseList);
+        data.put("orgs",orgList);
+        return Result.success("获取查询结果成功",data);
     }
 
     private Constants.CourseState getCurrentStateEnum(Integer beforeState) {

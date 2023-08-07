@@ -5,6 +5,7 @@ import com.cqupt.knowtolearn.model.dto.req.OrgReq;
 import com.cqupt.knowtolearn.model.po.user.Org;
 import com.cqupt.knowtolearn.model.vo.OrgHomeVO;
 import com.cqupt.knowtolearn.model.vo.OrgVO;
+import com.cqupt.knowtolearn.model.vo.QueryOrgVO;
 import org.aspectj.weaver.ast.Or;
 
 import java.util.List;
@@ -32,4 +33,6 @@ public interface IOrgService extends IService<Org> {
     void updateOrgIntro(Integer userId, String introduction);
 
     OrgHomeVO getOrgHome(Integer orgId);
+
+    List<QueryOrgVO> selectOrgList(String key);
 }

@@ -145,33 +145,60 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         User user = userDao.selectById(userId);
         Integer orgId = user.getOrgId();
         boolean isAuthor = courseBaseDao.selectCourseIsOwn(orgId, courseId) == 1;
-
         List<CourseDetailDTO> list = courseDetailsDao.selectTreeNodes(courseId);
-        Map<Integer, CourseDetailDTO> map = list.stream().collect(Collectors.toMap(key -> key.getId(), value -> value));
         List<CourseDetailDTO> data = new ArrayList<>();
+        if (isAuthor) {
+            Map<Integer, CourseDetailDTO> map = list.stream().collect(Collectors.toMap(key -> key.getId(), value -> value));
 
-        list.forEach(item -> {
+            list.forEach(item -> {
 
-            if (item.getPid().equals(0)) {
-                data.add(item);
-            }
-            // 放入父节点的 childrenTreeNodes
-
-            // 找到当前节点的父节点
-            // 第一层直接跳过,因为之前已经过滤了传入的根节点,得到的parent为null
-            // 二层及以上就可以在map中找到自己的父节点
-            CourseDetailDTO parent = map.get(item.getPid());
-
-            if (parent!=null) {
-                // 如果第一次遍历到,此时父节点的子节点为null,进行初始化
-                if (parent.getChild()==null) {
-                    parent.setChild(new ArrayList<>());
+                if (item.getPid().equals(0)) {
+                    data.add(item);
                 }
-
                 // 放入父节点的 childrenTreeNodes
-                parent.getChild().add(item);
-            }
-        });
+
+                // 找到当前节点的父节点
+                // 第一层直接跳过,因为之前已经过滤了传入的根节点,得到的parent为null
+                // 二层及以上就可以在map中找到自己的父节点
+                CourseDetailDTO parent = map.get(item.getPid());
+
+                if (parent!=null) {
+                    // 如果第一次遍历到,此时父节点的子节点为null,进行初始化
+                    if (parent.getChild()==null) {
+                        parent.setChild(new ArrayList<>());
+                    }
+
+                    // 放入父节点的 childrenTreeNodes
+                    parent.getChild().add(item);
+                }
+            });
+        } else {
+            Map<Integer, CourseDetailDTO> map = list.stream().collect(Collectors.toMap(key -> key.getId(), value -> value));
+
+            list.forEach(item -> {
+
+                if (item.getPid().equals(0)) {
+                    data.add(item);
+                }
+                // 放入父节点的 childrenTreeNodes
+
+                // 找到当前节点的父节点
+                // 第一层直接跳过,因为之前已经过滤了传入的根节点,得到的parent为null
+                // 二层及以上就可以在map中找到自己的父节点
+                CourseDetailDTO parent = map.get(item.getPid());
+
+                if (parent!=null) {
+                    // 如果第一次遍历到,此时父节点的子节点为null,进行初始化
+                    if (parent.getChild()==null) {
+                        parent.setChild(new ArrayList<>());
+                    }
+                    if(item.getStatus()==5) {
+                        // 放入父节点的 childrenTreeNodes
+                        parent.getChild().add(item);
+                    }
+                }
+            });
+        }
 
         Map<String,Object> res = new HashMap<>();
         res.put("isAuthor",isAuthor);
@@ -191,6 +218,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
     public void updateChapter(Integer chapterId, String chapterName) {
         CourseDetails courseDetails = courseDetailsDao.selectById(chapterId);
         courseDetails.setChapterName(chapterName);
+        courseDetails.setStatus(1);
         int update = courseDetailsDao.updateById(courseDetails);
         if (update!=1) {
             throw new RuntimeException("修改章节失败");
@@ -206,18 +234,22 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
     @Transactional
     public Map<String, Object> getSimpleCourseDetail(Integer chapterId) {
         CourseDetails courseDetails = null;
+        CourseBase courseBase = null;
         Org org = null;
         User user = null;
         List<SimpleCourseDetailDTO> list = null;
         try {
             courseDetails = courseDetailsDao.selectById(chapterId);
+            if (courseDetails.getStatus()!=5) {
+                return null;
+            }
             Integer courseId = courseDetails.getCourseId();
-            CourseBase courseBase = courseBaseDao.selectById(courseId);
+            courseBase = courseBaseDao.selectById(courseId);
             org = orgDao.selectById(courseBase.getOrgId());
             user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getOrgId, org.getId()));
             list = courseDetailsDao.selectSimpleTreeNodes(courseId);
         } catch (Exception e) {
-            throw new RuntimeException("数据库操作失败");
+            return null;
         }
         Map<Integer, SimpleCourseDetailDTO> map = list.stream().collect(Collectors.toMap(key -> key.getId(), value -> value));
         List<SimpleCourseDetailDTO> data = new ArrayList<>();
@@ -250,13 +282,15 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
         long publishTime = zonedDateTime.toInstant().toEpochMilli();
         Map<String,Object> res = new HashMap<>();
         res.put("name",courseDetails.getChapterName());
+        res.put("courseName",courseBase.getName());
         res.put("publishTime",publishTime);
+        res.put("courseId",courseBase.getId());
         res.put("url",courseDetails.getMedia());
         res.put("avatar",user.getAvatar());
         res.put("orgName",org.getName());
         res.put("orgId",org.getId());
         res.put("userId",user.getId());
-        res.put("id",courseDetails.getId());
+        res.put("id",courseDetails.getParentId());
         res.put("chapters",data);
         return res;
     }

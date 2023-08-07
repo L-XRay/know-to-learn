@@ -33,4 +33,6 @@ public interface ICourseBaseDao extends BaseMapper<CourseBase> {
     CourseVO selectCourseVoById(Integer orgId, Integer courseId);
 
     Integer selectCourseIsOwn(Integer orgId, Integer courseId);
+
+    List<HomeCourseVO> selectCourseList(String key);
 }

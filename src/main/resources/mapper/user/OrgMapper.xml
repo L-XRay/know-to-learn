@@ -42,6 +42,12 @@
         </collection>
     </resultMap>
 
+    <resultMap id="queryOrgMap" type="com.cqupt.knowtolearn.model.vo.QueryOrgVO">
+        <result column="id" property="id" />
+        <result column="avatar" property="avatar" />
+        <result column="name" property="name" />
+        <result column="intro" property="intro" />
+    </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
@@ -71,6 +77,21 @@
                  left join user u on o.id = u.org_id
                  left join course_base cb on o.id = cb.org_id
         where o.id = #{orgId} order by cb.publish_date desc
+    </select>
+
+    <select id="selectOrgList" parameterType="java.lang.String" resultMap="queryOrgMap">
+        select o.id,
+               o.name,
+               u.avatar,
+               o.intro
+        from org o
+                 inner join user u on u.org_id = o.id
+        where o.status = 1
+        <trim prefix="and" prefixOverrides="AND | OR" suffixOverrides="and">
+            <if test="null != key">
+                o.name like concat('%',#{key},'%')
+            </if>
+        </trim>
     </select>
 
 </mapper>
