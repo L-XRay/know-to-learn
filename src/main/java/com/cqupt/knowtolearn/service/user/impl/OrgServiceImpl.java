@@ -96,7 +96,7 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
         StationMessage stationMessage = new StationMessage();
         stationMessage.setUserId(org.getUserId());
         stationMessage.setTitle("机构申请已通过");
-        stationMessage.setContent("您的机构申请已通过,已为您创建好账户。\n 用户名:" + username +"\n 密码:" + password + "\n 请妥善保管");
+        stationMessage.setContent("您的机构["+org.getName()+"]申请已通过,已为您创建好账户。\n 用户名:" + username +"\n 密码:" + password + "\n 请妥善保管");
         stationMessage.setStatus(Constants.StationMessageState.NO_READ.getCode());
         stationMessage.setCreateTime(LocalDateTime.now());
         int insert = stationMessageDao.insert(stationMessage);
@@ -119,7 +119,7 @@ public class OrgServiceImpl extends ServiceImpl<IOrgDao, Org> implements IOrgSer
         StationMessage stationMessage = new StationMessage();
         stationMessage.setUserId(org.getUserId());
         stationMessage.setTitle("机构申请已拒绝");
-        stationMessage.setContent("您的机构申请已拒绝, 若有疑问请联系管理员");
+        stationMessage.setContent("您的机构["+org.getName()+"]申请已拒绝, 若有疑问请联系管理员");
         stationMessage.setStatus(Constants.StationMessageState.NO_READ.getCode());
         stationMessage.setCreateTime(LocalDateTime.now());
         int insert = stationMessageDao.insert(stationMessage);
