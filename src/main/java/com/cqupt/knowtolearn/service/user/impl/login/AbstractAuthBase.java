@@ -60,6 +60,10 @@ public abstract class AbstractAuthBase implements IAuthService {
         return userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getUsername, username));
     }
 
+    protected User getUserByEmail(String email) {
+        return userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getEmail, email));
+    }
+
     protected User registerEmailUser(String email){
         User registerUser = new User();
         registerUser.setEmail(email);

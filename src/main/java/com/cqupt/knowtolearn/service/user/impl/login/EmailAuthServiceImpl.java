@@ -40,7 +40,7 @@ public class EmailAuthServiceImpl extends AbstractAuthBase {
         }
         // 判断账号是否存在
         String username = req.getUsername();
-        User user = getUserByUsername(username);
+        User user = getUserByEmail(username);
         if (user==null) {
             return getLoginRes(registerEmailUser(email));
         }
