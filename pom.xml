@@ -137,6 +137,7 @@
             <artifactId>fusionauth-jwt</artifactId>
             <version>5.2.0</version>
         </dependency>
+
         <!-- 参数校验 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -30,6 +30,7 @@ public class OrgController {
     @Resource
     private CosService cosService;
 
+    //147
     @PostMapping("/user/org/apply")
     public Result applyOrg(HttpServletRequest request, @RequestBody OrgReq req) {
         boolean isSuccess = orgService.apply(UserHolder.getUser(), req);
@@ -43,12 +44,14 @@ public class OrgController {
         return Result.success("获取COS签名URL成功",materialSignature);
     }
 
+    //147
     @GetMapping("/org/info")
     public Result getOrgInfo(HttpServletRequest request) {
         Map<String,Object> map = orgService.findOwnOrg(UserHolder.getUser());
         return Result.success("获取机构信息成功",map);
     }
 
+    //147
     @PostMapping("/org/info/update/orgName")
     public Result updateOrgName(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String orgName = req.get("orgName");
@@ -56,6 +59,7 @@ public class OrgController {
         return Result.success(200,"修改机构名称成功");
     }
 
+    //147
     @PostMapping("/org/info/update/orgIntro")
     public Result updateOrgIntro(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String introduction = req.get("orgIntro");
@@ -63,6 +67,7 @@ public class OrgController {
         return Result.success(200,"修改机构介绍成功");
     }
 
+    //147
     @GetMapping("/user/org/{orgId}/home")
     public Result getOrgInfo(HttpServletRequest request,@PathVariable("orgId") Integer orgId) {
         OrgHomeVO data = orgService.getOrgHome(orgId);

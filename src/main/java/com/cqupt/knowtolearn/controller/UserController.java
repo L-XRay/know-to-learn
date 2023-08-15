@@ -52,6 +52,7 @@ public class UserController {
         return Result.fail("登录失败");
     }
 
+    //147
     @GetMapping("/personal")
     public Result get(HttpServletRequest request) {
 //        String token = request.getHeader("Authorization").substring(7);
@@ -62,6 +63,7 @@ public class UserController {
         return Result.fail("获取个人信息失败");
     }
 
+    //147
     @PostMapping("/update/password")
     public Result updatePassword(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String password = req.get("password");
@@ -70,6 +72,7 @@ public class UserController {
         return Result.success(200,"修改密码成功");
     }
 
+    //147
     @PostMapping("/update/username")
     public Result updateUsername(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String username = req.get("username");
@@ -78,6 +81,7 @@ public class UserController {
         return Result.success(200,"修改用户名成功");
     }
 
+    //147
     @PostMapping("/update/nickname")
     public Result updateNickname(HttpServletRequest request,@RequestBody Map<String,String> req) {
         String nickname = req.get("nickname");
@@ -111,12 +115,14 @@ public class UserController {
 //        return Result.fail("刷新token失败");
     }
 
+    //147
     @GetMapping("/stationMessage/all")
     public Result getStationMessage(HttpServletRequest request) {
         List<StationMessageVO> data = stationMessageService.listMessage(UserHolder.getUser());
         return Result.success("获取站内信成功",data);
     }
 
+    //147
     @GetMapping("/stationMessage/count")
     public Result getStationMessageCount(HttpServletRequest request) {
         Long data = stationMessageService.getNoReadCount(UserHolder.getUser());

@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * @date 2023/7/31 10:04
  * @description
  */
+//机构审核
 @Data
 @TableName("station_message")
 public class StationMessage {

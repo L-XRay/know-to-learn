@@ -96,7 +96,7 @@ public class CourseDetailsServiceImpl extends ServiceImpl<ICourseDetailsDao, Cou
 
     @Override
     public Map<String,Object> addChapterMedia(MediaReq req) {
-        CosRes signature = cosService.getOrgMaterialSignature(HttpMethodName.PUT, req.getSuffix());
+        CosRes signature = cosService.getOrgMaterialSignature(HttpMethodName.PUT, req.getSuffix());//夏瑞写的
         CourseDetails courseDetails = new CourseDetails();
         courseDetails.setParentId(req.getChapterId());
         courseDetails.setCourseId(req.getCourseId());

@@ -95,6 +95,7 @@ public class SystemController {
         return Result.success("获取主创人员信息成功",list);
     }
 
+    //147
     @GetMapping("/admin/pending/org")
     public Result getPendingOrgList(HttpServletRequest request) {
         List<OrgVO> pendingOrgList = orgService.getPendingOrgList();
@@ -122,12 +123,13 @@ public class SystemController {
         return Result.success("审核拒绝机构申请成功",true);
     }
 
+    //147
     @GetMapping("/admin/pending/media")
     public Result getPendingMediaList(HttpServletRequest request) {
         List<CourseDetailVO> pendingMediaList = courseDetailsService.getPendingMediaList();
         if (pendingMediaList==null || pendingMediaList.isEmpty()) {
-            return Result.success(200,"不存在未处理的机构申请");
+            return Result.success(200,"不存在未处理的视频申请");
         }
-        return Result.success("获取未处理的机构申请成功",pendingMediaList);
+        return Result.success("获取未处理的视频申请成功",pendingMediaList);
     }
 }

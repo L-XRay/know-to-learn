@@ -58,6 +58,7 @@ public class CourseController {
     @Resource
     private IOrgService orgService;
 
+    //147
     @GetMapping("/course/recommendation")
     public Result getHomeCourse(HttpServletRequest request) {
         List<HomeCourseVO> homeCourse = courseBaseService.getHomeCourse();
@@ -106,6 +107,8 @@ public class CourseController {
 //        Constants.CourseState currentStateEum = getCurrentStateEnum(currentState);
 //        return stateHandler.publish(courseId, currentStateEum);
 */
+
+    //147
     @PostMapping("/org/course/create")
     public Result create(HttpServletRequest request, @RequestBody CourseReq req) {
         Map<String, Object> data = courseBaseService.addCourse(UserHolder.getUser(), req);
@@ -119,29 +122,34 @@ public class CourseController {
         return Result.success("获取COS签名URL成功",materialSignature);
     }
 
+    //147
     @PostMapping("/org/course/create/chapter")
     public Result createChapter(HttpServletRequest request, @RequestBody ChapterReq req) {
         Integer chapterId = courseDetailsService.addCourseChapter(req);
         return Result.success("创建课程章节成功",chapterId);
     }
 
+    //147
     @GetMapping("/org/course/{courseId}/chapter")
     public Result getChapter(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
         List<Map<String, Object>> data = courseDetailsService.getChapter(courseId);
         return Result.success("获取课程章节成功",data);
     }
 
+    //147
     @PostMapping("/org/course/create/chapter/media")
     public Result createChapterMedia(HttpServletRequest request, @RequestBody MediaReq req) {
         Map<String, Object> data = courseDetailsService.addChapterMedia(req);
         return Result.success("创建章节视频信息成功",data);
     }
 
+    //147
     @GetMapping("/org/course/chapter/{chapterId}/media")
     public Result getMedia(HttpServletRequest request, @PathVariable("chapterId") Integer chapterId) {
         List<Map<String, Object>> data = courseDetailsService.getMedia(chapterId);
         return Result.success("获取章节视频成功",data);
     }
+
 
     @PostMapping("/org/course/chapter/media/update")
     public Result uploadMedia(HttpServletRequest request,@RequestBody Map<String,Object> req) {
@@ -155,6 +163,7 @@ public class CourseController {
         CosRes cosRes = cosService.getCourseMediaSignature(HttpMethodName.PUT,chapterId,chapterName, suffix);
         return Result.success("修改章节视频成功",cosRes);
     }
+
 
     @PostMapping("/org/course/chapter/media/audit/arraignment")
     public Result arraignmentMedia(HttpServletRequest request, @RequestBody Map<String,Integer> req) {
@@ -212,12 +221,14 @@ public class CourseController {
         return mediaStateHandler.publishRevoke(mediaId,currentStateEum);
     }
 
+    //147
     @GetMapping("/org/course/all")
     public Result getOwnOrgCourse(HttpServletRequest request) {
         List<OrgCourseVO> course = courseBaseService.getOwnCourse(UserHolder.getUser());
         return Result.success("获取本机构课程成功",course);
     }
 
+    //147
     @GetMapping("/user/course/{courseId}/get")
     public Result getCourse(HttpServletRequest request, @PathVariable("courseId") Integer courseId) {
         CourseVO courseVO = courseBaseService.selectCourseVoById(UserHolder.getUser(), courseId);
@@ -240,18 +251,21 @@ public class CourseController {
     }
 
     // TODO 无法保证是自己机构才能删除
+    //147
     @DeleteMapping("/org/course/{courseId}/delete")
     public Result deleteCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId) {
         courseBaseService.deleteCourse(courseId);
         return Result.success("删除课程成功",true);
     }
 
+    //147
     @PostMapping("/org/course/{courseId}/update")
     public Result updateCourse(HttpServletRequest request,@PathVariable("courseId") Integer courseId, @RequestBody CourseReq req) {
         Map<String, Object> data = courseBaseService.updateCourse(UserHolder.getUser(), courseId, req);
         return Result.success("修改课程成功",data);
     }
 
+    //147
     @DeleteMapping("/org/chapter/{chapterId}/delete")
     public Result deleteChapter(HttpServletRequest request,@PathVariable("chapterId") Integer chapterId) {
         courseDetailsService.deleteChapter(chapterId);
@@ -259,6 +273,7 @@ public class CourseController {
     }
 
     // TODO 无法保证是自己机构才能修改
+    //147
     @PostMapping("/org/chapter/update")
     public Result updateChapter(HttpServletRequest request,@RequestBody Map<String,Object> req) {
         Integer chapterId = (Integer) req.get("chapterId");
@@ -273,6 +288,7 @@ public class CourseController {
         return Result.success("评论成功",true);
     }
 
+    //147
     @GetMapping("/search")
     public Result searchAll(HttpServletRequest request, @RequestParam String key) {
         List<QueryOrgVO> orgList = orgService.selectOrgList(key);

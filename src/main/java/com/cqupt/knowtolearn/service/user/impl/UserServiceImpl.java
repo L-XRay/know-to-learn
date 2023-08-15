@@ -136,7 +136,7 @@ public class UserServiceImpl extends LoginStrategy implements IUserService {
 //        Integer userId = getCurrentUserId(token);
         try {
             User user = userDao.selectOne(new LambdaQueryWrapper<User>().eq(User::getId, userId));
-            String salt = passwordUtil.generateSalt();
+            String salt = passwordUtil.generateSalt();//夏瑞写的
             String encryptPassword = passwordUtil.encryptPassword(inputPassword, salt);
             user.setPassword(encryptPassword);
             user.setSalt(salt);
